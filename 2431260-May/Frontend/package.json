@@ -1,0 +1,6 @@
+{
+  "name": "may-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Vanilla HTML/JS pollution map (Leaflet). No build step — map.html is served as a static file from deploy/public/may/."
+}

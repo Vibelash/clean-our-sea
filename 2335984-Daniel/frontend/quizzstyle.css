@@ -1,0 +1,286 @@
+/* main container for the quiz page */
+.quiz-container 
+{
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+/* Page headings */
+.page-title 
+{
+  text-align: center;
+  font-size: 2.5rem;
+  color: var(--bg-dark);
+  margin-bottom: 10px;
+}
+
+.page-subtitle 
+{
+  text-align: center;
+  color: var(--bg-dark);
+  margin-bottom: 40px;
+}
+
+/* grid for all the quiz cards which ajusts based on screen size */
+.quiz-grid 
+{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+/* styling for each quiz card */
+.quiz-card 
+{
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+/* hover effect for visual engagement */
+.quiz-card:hover 
+{
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.quiz-icon 
+{
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+/* title and description inside the cards */
+.quiz-title 
+{
+  font-size: 1.5rem;
+  color: var(--bg-dark);
+  margin-bottom: 10px;
+}
+
+.quiz-description 
+{
+  color: var(--bg-dark);
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+/* bottom bit inside each quiz card */
+.quiz-meta 
+{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* badge showing how hard the quiz is */
+.quiz-difficulty 
+{
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* colour code for each level for visuals */
+.difficulty-easy 
+{
+  background: #d1fae5;
+  color: #065f2a;
+}
+
+.difficulty-medium 
+{
+  background: #fef3c7;
+  color: #924819;
+}
+
+.difficulty-hard 
+{
+  background: #fee2e2;
+  color: #ab1010;
+}
+
+.quiz-questions 
+{
+  color: var(--muted-dark);
+  font-size: 0.9rem;
+}
+/* button to start the quiz */
+.start-btn 
+{
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 15px;
+  width: 100%;
+}
+
+/* hover effect */
+.start-btn:hover 
+{
+  background: var(--accent-light);
+}
+
+/* section at top showing stats for progress */
+.stats-section 
+{
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.stats-title 
+{
+  font-size: 1.5rem;
+  color: var(--bg-dark);
+  margin-bottom: 20px;
+}
+
+/* grid layout for the stat cards */
+.stats-grid 
+{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+/* each stat card. */
+.stat-card 
+{
+  text-align: center;
+  padding: 20px;
+  background: var(--muted-light);
+  border-radius: 8px;
+}
+
+/* Stat number */
+.stat-number 
+{
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--accent);
+  margin-bottom: 5px;
+}
+
+/* label text for stats */
+.stat-label 
+{
+  color: var(--muted-dark);
+  font-size: 0.9rem;
+}
+
+/* Search bar styling */
+.search-container 
+{
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+#quiz-search 
+{
+  padding: 12px 20px;
+  font-size: 1rem;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  color: var(--bg-dark);
+  transition: all 0.3s ease;
+}
+
+#quiz-search:focus 
+{
+  outline: none;
+  border-color: var(--accent-light);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+#quiz-search::placeholder 
+{
+  color: var(--muted-dark);
+}
+
+/* Filter dropdown styling */
+.filter-container {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.filter-container label 
+{
+  font-size: 1rem;
+  color: var(--bg-dark);
+  margin-right: 10px;
+  font-weight: 500;
+}
+
+#difficulty-filter 
+{
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  background: white;
+  color: var(--bg-dark);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#difficulty-filter:hover 
+{
+  background: var(--muted-light);
+}
+
+#difficulty-filter:focus 
+{
+  outline: none;
+  border-color: var(--accent-light);
+}
+
+/* container that holds both filter + search */
+.filter-row 
+{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+/* left side (difficulty filter) */
+.filter-left 
+{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* right side (search bar) */
+.filter-right 
+{
+  margin-left: auto; /* pushes search bar all the way to the right */
+}
+
+/* search bar stays the same size but aligns right */
+#quiz-search 
+{
+  max-width: 300px;
+}

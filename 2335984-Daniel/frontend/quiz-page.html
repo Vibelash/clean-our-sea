@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz - Clean Our Sea</title>
+    <link rel="stylesheet" href="quiz-page.css" />
+  </head>
+  <body>
+
+    <nav>
+      <a href="#" class="logo"><img src="logo.png" alt="Clean Our Sea Logo" /></a>
+      <a href="communities.html">Community</a>
+      <a href="index.html">Home</a>
+      <a href="quizzes.html" class="active">Quizzes</a>
+      <a href="#">Games</a>
+      <a href="#">Leaderboards</a>
+      <a href="#" class="map">Log in</a>
+    </nav>
+
+    <div class="quiz-wrapper">
+
+      <!--loading-->
+      <div id="loading-screen" class="screen">
+        <div class="loading-spinner"></div>
+        <p>Loading quiz…</p>
+      </div>
+
+      <!--quiz-->
+      <div id="quiz-screen" class="screen hidden">
+        <div class="quiz-header">
+          <button class="back-btn" onclick="window.location.href='quizzes.html'">← Back</button>
+          <h2 id="quiz-title-label">Quiz</h2>
+          <span id="progress-label" class="progress-label">Question 1 of 10</span>
+        </div>
+
+        <div class="progress-bar-track">
+          <div id="progress-bar" class="progress-bar-fill"></div>
+        </div>
+
+        <div class="question-card">
+          <span id="question-type-badge" class="type-badge badge-tf">True / False</span>
+          <p id="question-text" class="question-text">Loading…</p>
+          <div id="options-container" class="options-container"></div>
+          <button id="next-btn" class="next-btn" disabled>Next →</button>
+        </div>
+      </div>
+
+      <!--results-->
+      <div id="results-screen" class="screen hidden">
+        <div class="results-card">
+          <div id="result-emoji" class="result-emoji">🎉</div>
+          <h2 id="result-title" class="result-title">Quiz Complete!</h2>
+          <p id="result-subtitle" class="result-subtitle"></p>
+
+          <div class="score-ring-wrapper">
+            <svg class="score-ring" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="52" class="ring-bg" />
+              <circle id="ring-fill" cx="60" cy="60" r="52" class="ring-fg" />
+            </svg>
+            <div class="score-text">
+              <span id="score-number">0</span>
+              <span class="score-denom" id="score-denom">/ 10</span>
+            </div>
+          </div>
+
+          <p id="score-percent" class="score-percent"></p>
+          <div id="breakdown" class="breakdown"></div>
+
+          <div class="result-btns">
+            <button class="retry-btn" onclick="window.location.reload()">Try Again</button>
+            <button class="home-btn" onclick="window.location.href='quizzes.html'">All Quizzes</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <script src="quiz-page.js"></script>
+  </body>
+</html>

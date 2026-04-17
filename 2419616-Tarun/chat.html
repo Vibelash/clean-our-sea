@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat — Clean Our Sea</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/enhancements.css">
+    <link rel="stylesheet" href="css/2419616/communities.css">
+</head>
+<body>
+
+    <nav>
+        <a class="brand" href="index.html">
+            <span class="dot"></span>
+            Clean Our Sea
+        </a>
+        <a href="index.html">Home</a>
+        <a href="news.html">News</a>
+        <a href="game.html">Play</a>
+        <a href="quizzes.html">Quizzes</a>
+        <a href="communities.html" class="active">Communities</a>
+        <a href="may/map.html">Map</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <div class="spacer"></div>
+        <div id="user-chip-slot"></div>
+    </nav>
+
+    <div class="chat-container fade-up">
+        <a href="communities.html" class="back-link">&larr; Back to Communities</a>
+
+        <div class="chat-card">
+            <h1 id="communityName">Chat</h1>
+            <div id="messages" class="messages-area"></div>
+            <form id="chatForm" class="chat-form">
+                <input id="author" type="text" placeholder="Your name" required>
+                <input id="msg" type="text" placeholder="Type a message..." required autocomplete="off">
+                <button type="submit" class="btn primary">Send</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/2419616/chat.js"></script>
+    <script src="js/enhancements.js"></script>
+    <script>document.addEventListener("DOMContentLoaded",()=>renderUserChip());</script>
+</body>
+</html>

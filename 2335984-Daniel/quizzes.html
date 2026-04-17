@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean Quizzes — Clean Our Sea</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/quizzes.css">
+    <link rel="stylesheet" href="css/enhancements.css">
+</head>
+<body>
+
+    <nav>
+        <a class="brand" href="index.html">
+            <span class="dot"></span>
+            Clean Our Sea
+        </a>
+        <a href="index.html">Home</a>
+        <a href="news.html">News</a>
+        <a href="game.html">Play</a>
+        <a href="quizzes.html" class="active">Quizzes</a>
+                <a href="communities.html">Communities</a>
+        <a href="may/map.html">Map</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <div class="spacer"></div>
+        <div id="user-chip-slot"></div>
+    </nav>
+
+    <div class="quiz-container">
+        <span class="home-tag">Test Your Knowledge</span>
+        <h1 class="page-title">Ocean World Quizzes</h1>
+        <p class="page-subtitle">Take a quiz to test your knowledge and learn about the marine world and conservation efforts</p>
+
+        <!-- Progress stats -->
+        <div class="stats-section fade-up">
+            <h2 class="stats-title">Your Progress</h2>
+            <div class="stats-grid fade-up-stagger">
+                <div class="stat-card">
+                    <span class="stat-number">5</span>
+                    <span class="stat-label">Quizzes Completed</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">70%</span>
+                    <span class="stat-label">Average Score</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">4</span>
+                    <span class="stat-label">Badges Earned</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">350</span>
+                    <span class="stat-label">Total Points</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-row fade-up">
+            <div class="filter-left">
+                <label for="difficulty-filter">Filter by difficulty</label>
+                <select id="difficulty-filter">
+                    <option value="all">All Quizzes</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+            <div class="filter-right">
+                <input type="text" id="quiz-search" placeholder="Search Quizzes...">
+            </div>
+        </div>
+
+        <!-- Quiz cards -->
+        <div class="quiz-grid fade-up-stagger">
+            <div class="quiz-card">
+                <div class="quiz-icon">🌊</div>
+                <h3 class="quiz-title">Ocean Basics</h3>
+                <p class="quiz-description">Learn the fundamentals of ocean ecosystems, marine life, and the importance of healthy seas.</p>
+                <div class="quiz-meta">
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                    <span class="quiz-questions">10 Questions</span>
+                </div>
+                <button class="start-btn">Start Quiz</button>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-icon">♻️</div>
+                <h3 class="quiz-title">Plastic Pollution</h3>
+                <p class="quiz-description">Discover the impact of plastic waste on marine environments and how we can reduce it.</p>
+                <div class="quiz-meta">
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                    <span class="quiz-questions">12 Questions</span>
+                </div>
+                <button class="start-btn">Start Quiz</button>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-icon">🐠</div>
+                <h3 class="quiz-title">Marine Biodiversity</h3>
+                <p class="quiz-description">Explore the incredible variety of life in our oceans and why protecting aquatic life matters.</p>
+                <div class="quiz-meta">
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                    <span class="quiz-questions">15 Questions</span>
+                </div>
+                <button class="start-btn">Start Quiz</button>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-icon">🌡️</div>
+                <h3 class="quiz-title">Climate Change & Oceans</h3>
+                <p class="quiz-description">Understand how climate change affects ocean temperatures, currents, and ecosystems.</p>
+                <div class="quiz-meta">
+                    <span class="quiz-difficulty difficulty-medium">Medium</span>
+                    <span class="quiz-questions">14 Questions</span>
+                </div>
+                <button class="start-btn">Start Quiz</button>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-icon">🐢</div>
+                <h3 class="quiz-title">Endangered Species</h3>
+                <p class="quiz-description">Learn about threatened marine animals and what conservation efforts can help save endangered species.</p>
+                <div class="quiz-meta">
+                    <span class="quiz-difficulty difficulty-hard">Hard</span>
+                    <span class="quiz-questions">13 Questions</span>
+                </div>
+                <button class="start-btn">Start Quiz</button>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-icon">🏖️</div>
+                <h3 class="quiz-title">Beach Cleanup Expert</h3>
+                <p class="quiz-description">Master the best practices and procedures for organising and executing effective beach cleanups.</p>
+                <div class="quiz-meta">
+                    <span class="quiz-difficulty difficulty-easy">Easy</span>
+                    <span class="quiz-questions">10 Questions</span>
+                </div>
+                <button class="start-btn">Start Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="quizzes.js"></script>
+    <script src="js/enhancements.js"></script>
+</body>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pollution Map · Clean Our Sea</title>
+
+    <!-- Shared site theme (dark ocean gradient + nav). Path is relative to
+         deploy/public/may/, so ../css/* resolves to deploy/public/css/*. -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/enhancements.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav>
+        <a class="brand" href="../index.html">
+            <span class="dot"></span>
+            Clean Our Sea
+        </a>
+        <a href="../index.html">Home</a>
+        <a href="../news.html">News</a>
+        <a href="../game.html">Play</a>
+        <a href="../quizzes.html">Quizzes</a>
+        <a href="../communities.html">Communities</a>
+        <a href="map.html" class="active">Map</a>
+        <a href="../leaderboard.html">Leaderboard</a>
+        <div class="spacer"></div>
+        <div id="user-chip-slot"></div>
+    </nav>
+
+    <main class="map-page">
+        <header class="map-page-head">
+            <h1>Pollution Reporting Map</h1>
+            <p class="map-page-sub">Click anywhere on the map to report pollution. Pick a stage 1–5 to indicate severity.</p>
+        </header>
+
+        <div id="map"></div>
+
+        <section class="map-reports">
+            <h2>Recent Reports</h2>
+            <ul id="reportList"></ul>
+        </section>
+    </main>
+
+    <!-- POPUP -->
+    <div id="popupForm" class="popup hidden">
+        <div class="popup-content">
+            <h3>Add Report</h3>
+
+            <input id="desc" placeholder="Describe what you saw...">
+
+            <p>Select Stage:</p>
+            <div id="stages"></div>
+
+            <button id="submitBtn" type="button">Submit</button>
+            <button id="cancelBtn" type="button">Cancel</button>
+        </div>
+    </div>
+
+    <!-- SUCCESS / ERROR TOAST -->
+    <div id="successMsg" class="success hidden"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <script>
+        const API = "http://localhost:8080/pollution-reports";
+
+        let selectedLat = null;
+        let selectedLng = null;
+        let selectedStage = null;
+        let markers = [];
+
+        const map = L.map('map').setView([16.8661, 96.1951], 13);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+        setTimeout(() => map.invalidateSize(), 200);
+
+        // CLICK MAP -> open popup
+        map.on('click', e => {
+            selectedLat = e.latlng.lat;
+            selectedLng = e.latlng.lng;
+            openPopup();
+        });
+
+        // STAGE BOX BUILD
+        const stagesDiv = document.getElementById("stages");
+        [1, 2, 3, 4, 5].forEach(s => {
+            const btn = document.createElement("span");
+            btn.innerText = s;
+            btn.className = "stage-box";
+            btn.dataset.stage = s;
+            btn.onclick = () => {
+                selectedStage = s;
+                document.querySelectorAll(".stage-box").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+            };
+            stagesDiv.appendChild(btn);
+        });
+
+        // POPUP HELPERS
+        function openPopup() {
+            // Reset form fields each time the popup is opened so stale state
+            // from a previous submission can't break the next report.
+            document.getElementById("desc").value = "";
+            selectedStage = null;
+            document.querySelectorAll(".stage-box").forEach(b => b.classList.remove("active"));
+            document.getElementById("popupForm").classList.remove("hidden");
+            setTimeout(() => document.getElementById("desc").focus(), 50);
+        }
+
+        function closePopup() {
+            document.getElementById("popupForm").classList.add("hidden");
+            document.getElementById("desc").value = "";
+            selectedStage = null;
+            selectedLat = null;
+            selectedLng = null;
+            document.querySelectorAll(".stage-box").forEach(b => b.classList.remove("active"));
+        }
+
+        function showMessage(text, isError) {
+            const msg = document.getElementById("successMsg");
+            msg.textContent = text;
+            msg.classList.remove("hidden", "error");
+            if (isError) msg.classList.add("error");
+            clearTimeout(showMessage._t);
+            showMessage._t = setTimeout(() => msg.classList.add("hidden"), 3000);
+        }
+
+        function getColor(stage) {
+            return ["green", "blue", "orange", "red", "violet"][stage - 1];
+        }
+
+        // LOAD REPORTS
+        function loadReports() {
+            fetch(API)
+                .then(res => {
+                    if (!res.ok) throw new Error("HTTP " + res.status);
+                    return res.json();
+                })
+                .then(data => {
+                    markers.forEach(m => map.removeLayer(m));
+                    markers = [];
+
+                    const list = document.getElementById("reportList");
+                    list.innerHTML = "";
+
+                    if (!data.length) {
+                        list.innerHTML = "<li class='empty'>No reports yet — click the map to add the first one.</li>";
+                        return;
+                    }
+
+                    data.forEach(r => {
+                        const icon = L.icon({
+                            iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${getColor(r.stage)}.png`,
+                            iconSize: [25, 41]
+                        });
+
+                        const marker = L.marker([r.latitude, r.longitude], { icon })
+                            .addTo(map)
+                            .bindPopup(`
+                                <div>
+                                    <p><strong>User:</strong> ${r.userId || "DemoUser"}</p>
+                                    <p><strong>Description:</strong> ${escapeHtml(r.description)}</p>
+                                    <p><strong>Stage:</strong> ${r.stage}</p>
+                                    <p><strong>Time:</strong> ${r.createdAt || "N/A"}</p>
+                                    <button onclick="deleteReport(${r.id})">Clean Up</button>
+                                </div>
+                            `);
+
+                        markers.push(marker);
+
+                        const li = document.createElement("li");
+                        li.innerHTML = `<span class="badge stage-${r.stage}">Stage ${r.stage}</span> ${escapeHtml(r.description)}`;
+                        list.appendChild(li);
+                    });
+                })
+                .catch(err => {
+                    console.error("loadReports failed:", err);
+                    showMessage("⚠️ Couldn't load reports. Is the backend running on :8080?", true);
+                });
+        }
+
+        function escapeHtml(s) {
+            return String(s ?? "").replace(/[&<>"']/g, c => ({
+                "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+            }[c]));
+        }
+
+        // SUBMIT
+        function submitReport() {
+            const desc = document.getElementById("desc").value.trim();
+
+            if (selectedLat === null || selectedLng === null) {
+                showMessage("⚠️ Click on the map first to choose a location.", true);
+                return;
+            }
+            if (!selectedStage) {
+                showMessage("⚠️ Pick a stage 1–5.", true);
+                return;
+            }
+            if (!desc) {
+                showMessage("⚠️ Add a description.", true);
+                return;
+            }
+
+            const payload = {
+                latitude:    selectedLat,
+                longitude:   selectedLng,
+                description: desc,
+                stage:       selectedStage,
+                userId:      "DemoUser",
+                createdAt:   new Date().toISOString()
+            };
+
+            // Disable the button while the request is in flight so a double
+            // click can't fire two POSTs.
+            const btn = document.getElementById("submitBtn");
+            btn.disabled = true;
+
+            fetch(API, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error("HTTP " + res.status);
+                    return res.json();
+                })
+                .then(() => {
+                    closePopup();
+                    showMessage("✅ Report submitted!");
+                    loadReports();
+                })
+                .catch(err => {
+                    console.error("submitReport failed:", err);
+                    showMessage("⚠️ Couldn't save report. Backend on :8080? See console.", true);
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                });
+        }
+
+        // DELETE
+        function deleteReport(id) {
+            fetch(`${API}/${id}`, { method: "DELETE" })
+                .then(res => {
+                    if (!res.ok) throw new Error("HTTP " + res.status);
+                    loadReports();
+                    showMessage("🌊 Great job! You helped clean the sea!");
+                })
+                .catch(err => {
+                    console.error("deleteReport failed:", err);
+                    showMessage("⚠️ Couldn't delete that report.", true);
+                });
+        }
+
+        // Wire buttons via JS so we don't depend on global window scope
+        // (some bundlers / strict CSPs hide functions from inline onclick).
+        document.getElementById("submitBtn").addEventListener("click", submitReport);
+        document.getElementById("cancelBtn").addEventListener("click", closePopup);
+
+        loadReports();
+    </script>
+
+</body>
+</html>

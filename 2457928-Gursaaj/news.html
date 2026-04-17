@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News & Facts — Clean Our Sea</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/enhancements.css">
+</head>
+<body>
+
+    <nav>
+        <a class="brand" href="index.html">
+            <span class="dot"></span>
+            Clean Our Sea
+        </a>
+        <a href="index.html">Home</a>
+        <a href="news.html" class="active">News</a>
+        <a href="game.html">Play</a>
+        <a href="quizzes.html">Quizzes</a>
+                <a href="communities.html">Communities</a>
+        <a href="may/map.html">Map</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <div class="spacer"></div>
+        <div id="user-chip-slot"></div>
+    </nav>
+
+    <div class="news-shell">
+
+        <header class="news-header">
+            <span class="home-tag">News & Facts</span>
+            <h1>SDG 14 ocean feed</h1>
+            <p class="news-header-sub">
+                Curated short-form updates on ocean plastic, marine species,
+                climate progress, and what you can do about it.
+            </p>
+
+            <!-- Category filter chips -->
+            <div class="news-filter" id="news-filter" role="tablist">
+                <button class="chip active" data-cat="all">All</button>
+                <button class="chip" data-cat="plastic">Plastic</button>
+                <button class="chip" data-cat="species">Species</button>
+                <button class="chip" data-cat="science">Science</button>
+                <button class="chip" data-cat="progress">Progress</button>
+                <button class="chip" data-cat="action">Action</button>
+            </div>
+        </header>
+
+        <!-- Full article list -->
+        <main id="news-list" class="news-list">
+            <div class="news-loading">Loading articles…</div>
+        </main>
+
+    </div>
+
+    <!-- ================= ARTICLE MODAL ================= -->
+    <div id="article-modal" class="modal" aria-hidden="true">
+        <div class="modal-backdrop" data-close-article></div>
+        <div class="modal-panel article-modal-panel" role="dialog" aria-modal="true" aria-labelledby="article-title">
+            <button class="modal-close" data-close-article aria-label="Close">&times;</button>
+
+            <span class="article-badge" id="article-category">category</span>
+            <h2 id="article-title">Title</h2>
+            <p class="article-meta">
+                <span id="article-date">—</span>
+                <span class="dot-sep" aria-hidden="true">·</span>
+                <span id="article-source">—</span>
+            </p>
+            <div class="article-body" id="article-body"></div>
+            <p class="article-sourcelink">
+                <a id="article-source-link" href="#" target="_blank" rel="noopener" hidden>Read the full source →</a>
+            </p>
+
+            <div class="modal-footer">
+                <button class="ghost-btn" data-close-article>Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/news.js"></script>
+    <script src="js/enhancements.js"></script>
+</body>
+</html>

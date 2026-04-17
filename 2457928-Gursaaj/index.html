@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean Our Sea — SDG 14</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/enhancements.css">
+</head>
+<body>
+
+    <nav>
+        <a class="brand" href="index.html">
+            <span class="dot"></span>
+            Clean Our Sea
+        </a>
+        <a href="index.html" class="active">Home</a>
+        <a href="news.html">News</a>
+        <a href="game.html">Play</a>
+        <a href="quizzes.html">Quizzes</a>
+                <a href="communities.html">Communities</a>
+        <a href="may/map.html">Map</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <div class="spacer"></div>
+        <div id="user-chip-slot"></div>
+    </nav>
+
+    <!-- ============ HERO ============ -->
+    <section class="home-hero">
+        <div class="home-hero-inner">
+            <span class="home-tag">SDG 14 · Life Below Water</span>
+            <h1 class="home-title">
+                Our oceans are <br>in trouble.
+            </h1>
+            <p class="home-sub">
+                8 million tonnes of plastic enter the sea every year.
+                Over 800 marine species are affected by ocean debris.
+                Half the world's coral has disappeared since 1950.
+                This project exists to make those numbers feel real —
+                with news, facts, and a small way to take part.
+            </p>
+            <div class="home-cta-row">
+                <a href="news.html" class="home-cta primary">Read the news</a>
+                <a href="#home-news" class="home-cta ghost">See latest ↓</a>
+            </div>
+
+            <div class="home-hero-stats">
+                <div class="home-hero-stat">
+                    <span class="home-hero-num" id="home-stat-articles">—</span>
+                    <span class="home-hero-lab">articles in feed</span>
+                </div>
+                <div class="home-hero-stat">
+                    <span class="home-hero-num" id="home-stat-pieces">—</span>
+                    <span class="home-hero-lab">pieces cleaned</span>
+                </div>
+                <div class="home-hero-stat">
+                    <span class="home-hero-num" id="home-stat-games">—</span>
+                    <span class="home-hero-lab">games played</span>
+                </div>
+            </div>
+        </div>
+        <div class="home-hero-scroll" aria-hidden="true">↓</div>
+    </section>
+
+    <!-- ============ LATEST NEWS GRID ============ -->
+    <section class="home-section" id="home-news">
+        <div class="home-section-head">
+            <div>
+                <h2 class="home-section-title">Latest from the feed</h2>
+                <p class="home-section-sub">
+                    Fresh facts, species spotlights, and SDG 14 progress
+                    updates. Tap a card to read the full article.
+                </p>
+            </div>
+            <a href="news.html" class="home-section-link">View all →</a>
+        </div>
+
+        <div class="home-news-grid fade-up-stagger" id="home-news-grid">
+            <!-- Cards injected by js/news.js -->
+            <div class="home-news-card skeleton"><div class="home-news-body"><div class="skel-line"></div><div class="skel-line short"></div><div class="skel-line"></div></div></div>
+            <div class="home-news-card skeleton"><div class="home-news-body"><div class="skel-line"></div><div class="skel-line short"></div><div class="skel-line"></div></div></div>
+            <div class="home-news-card skeleton"><div class="home-news-body"><div class="skel-line"></div><div class="skel-line short"></div><div class="skel-line"></div></div></div>
+            <div class="home-news-card skeleton"><div class="home-news-body"><div class="skel-line"></div><div class="skel-line short"></div><div class="skel-line"></div></div></div>
+            <div class="home-news-card skeleton"><div class="home-news-body"><div class="skel-line"></div><div class="skel-line short"></div><div class="skel-line"></div></div></div>
+            <div class="home-news-card skeleton"><div class="home-news-body"><div class="skel-line"></div><div class="skel-line short"></div><div class="skel-line"></div></div></div>
+        </div>
+    </section>
+
+    <!-- ============ SDG 14 QUICK FACTS ============ -->
+    <section class="home-section">
+        <div class="home-section-head">
+            <div>
+                <h2 class="home-section-title">Why this matters</h2>
+                <p class="home-section-sub">
+                    Five numbers that explain the scale of the crisis.
+                </p>
+            </div>
+        </div>
+
+        <div class="home-facts-grid fade-up-stagger">
+            <div class="home-fact">
+                <span class="home-fact-num">8M</span>
+                <span class="home-fact-unit">tonnes</span>
+                <span class="home-fact-desc">of plastic enter the ocean every year.</span>
+            </div>
+            <div class="home-fact">
+                <span class="home-fact-num">800+</span>
+                <span class="home-fact-unit">species</span>
+                <span class="home-fact-desc">of marine life are affected by debris.</span>
+            </div>
+            <div class="home-fact">
+                <span class="home-fact-num">5.25T</span>
+                <span class="home-fact-unit">pieces</span>
+                <span class="home-fact-desc">of plastic float in the oceans right now.</span>
+            </div>
+            <div class="home-fact">
+                <span class="home-fact-num">450</span>
+                <span class="home-fact-unit">years</span>
+                <span class="home-fact-desc">for a single plastic bottle to decompose.</span>
+            </div>
+            <div class="home-fact">
+                <span class="home-fact-num">1 in 3</span>
+                <span class="home-fact-unit">fish</span>
+                <span class="home-fact-desc">caught for food contains plastic.</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ HOW YOU CAN HELP ============ -->
+    <section class="home-section">
+        <div class="home-section-head">
+            <div>
+                <h2 class="home-section-title">How you can help</h2>
+                <p class="home-section-sub">
+                    Three places to start — pick the one that fits you today.
+                </p>
+            </div>
+        </div>
+
+        <div class="home-help-grid fade-up-stagger">
+            <div class="home-help-card">
+                <span class="home-help-icon" aria-hidden="true">📚</span>
+                <h3>Learn</h3>
+                <p>Read the latest articles on plastic pollution, marine species, and ocean science. Knowing the scale is step one.</p>
+                <a href="news.html" class="home-help-link">Open the news →</a>
+            </div>
+            <div class="home-help-card">
+                <span class="home-help-icon" aria-hidden="true">🌊</span>
+                <h3>Act</h3>
+                <p>Swap to reusables, refuse single-use plastic, join a beach cleanup, or support a plastic treaty campaign in your country.</p>
+                <a href="news.html?category=action" class="home-help-link">See action ideas →</a>
+            </div>
+            <div class="home-help-card">
+                <span class="home-help-icon" aria-hidden="true">🎮</span>
+                <h3>Play</h3>
+                <p>Our little snake game turns the crisis into something you can feel. Every round adds to a shared community counter.</p>
+                <a href="game.html" class="home-help-link">Try the game →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ CLOSING CTA ============ -->
+    <section class="home-section home-cta-section">
+        <div class="home-cta-card fade-up">
+            <h2>Stay with the feed</h2>
+            <p>
+                New articles, facts, and progress updates are added
+                regularly. Follow along to see what's changing — and
+                what still isn't.
+            </p>
+            <div class="home-cta-row center">
+                <a href="news.html" class="home-cta primary">Read all news</a>
+                <a href="game.html" class="home-cta ghost">Or play a round</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="home-footer">
+        <span>Clean Our Sea · CS2802 project · UN SDG 14 Life Below Water</span>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/news.js"></script>
+    <script src="js/enhancements.js"></script>
+</body>
+</html>

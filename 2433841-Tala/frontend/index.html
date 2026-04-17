@@ -1,0 +1,72 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <section id="weekly-quota-section">
+
+    <h2>Weekly Goal</h2>
+
+    <div class="quota-container">
+
+        <div class="quota-display">
+            <p>Your Weekly Goal: <span id="quota-value">0</span> points</p>
+            <p>Current Points: <span id="weekly-points">0</span></p>
+        </div>
+
+        <div class="progress-bar-container">
+            <div id="progress-bar"></div>
+        </div>
+
+        <div class="quota-input">
+            <input type="number" id="quota-input" placeholder="Set weekly goal">
+            <button id="set-quota-btn">Set Goal</button>
+        </div>
+
+    </div>
+
+</section>
+
+        <h1>Leaderboard</h1>
+        <div class="tab-buttons">
+            <button id="daily-tab" class="active">Daily</button>
+            <button id="yearly-tab">Yearly</button>
+        </div>
+        <div id="timer">Leaderboard resets in <span id="countdown">60</span> seconds</div>
+        <div class="filter">
+            <label for="country-filter">Filter by Area:</label>
+            <select id="country-filter">
+                <option value="all">All</option>
+                <option value="London">London</option>
+                <option value="Southampton">Southampton</option>
+                <option value="Bristol">Bristol</option>
+            </select>
+        </div>
+    </header>
+    <main>
+        <section id="leaderboard">
+            <h2>Winners </h2>
+            <div id="top-three"></div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Followers</th>
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body">
+                    <!-- Leaderboard entries will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>                            

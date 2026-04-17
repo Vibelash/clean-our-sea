@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ocean Quizzes - Clean Our Sea</title>
+    <style>
+      :root
+      { /*main colors theme of the webpage */
+        --white: #ffffff;
+        --muted-light: #ccf1fe;
+        --accent-light: #59a0e7;
+        --bg-dark: #0f1724;
+        --card-dark: #0b1220;
+        --muted-dark: #9aa4b2;
+        --accent: #3b82f6;
+      }
+
+      body
+      {
+        margin:0;
+        padding:0;
+        width:100%;
+        min-height:100vh;
+        font-family:Arial, Helvetica, sans-serif;
+        color:#000;
+        overflow-x:hidden;
+        background-color:var(--muted-light);
+      }
+      /*navigation bar styling*/
+      nav 
+      {
+        background: white;
+        padding: 15px 30px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+      }
+
+      nav a 
+      {
+        display: inline-block;
+        padding: 10px 16px;
+        border-radius: 8px;
+        background: transparent;
+        color: #4a4a4d;
+        font-weight: 500;
+        text-decoration: none;
+        transition: 0.3s ease;
+        position: relative;
+      }
+
+      nav a:hover 
+      {
+        background: rgba(0, 0, 0, 0.08);
+      }
+      
+      nav a::after 
+      {
+        content: "";
+        display: block;
+        height: 3px;
+        width: 0%;
+        background: #070f2c;
+        transition: 0.3s ease;
+        margin: 0 auto;
+        border-radius: 10px;
+      }
+
+      nav a:hover::after 
+      {
+        width: 80%;
+      }
+
+      nav a.active::after 
+      {
+        width: 80%;
+      }
+
+      nav a.logo img 
+      {
+        height: 30px;
+        width: auto;
+        display: block;
+      }
+
+      .map
+      {
+        border: 2px solid #070f2c;
+        border-radius: 4px;
+        padding: 2px 2rem;
+        color:#070f2c;
+      }
+
+      .quiz-container 
+      {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+      }
+
+      .page-title 
+      {
+        text-align: center;
+        font-size: 2.5rem;
+        color: var(--bg-dark);
+        margin-bottom: 10px;
+      }
+
+      .page-subtitle 
+      {
+        text-align: center;
+        color: var(--muted-dark);
+        margin-bottom: 40px;
+      }
+      /*quiz cards */
+      .quiz-grid 
+      {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
+      }
+
+      .quiz-card 
+      {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+      }
+      /*hover effect*/
+      .quiz-card:hover 
+      {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      }
+
+      .quiz-icon 
+      {
+        font-size: 3rem;
+        margin-bottom: 15px;
+      }
+
+      .quiz-title 
+      {
+        font-size: 1.5rem;
+        color: var(--bg-dark);
+        margin-bottom: 10px;
+      }
+
+      .quiz-description 
+      {
+        color: var(--muted-dark);
+        margin-bottom: 15px;
+        line-height: 1.6;
+      }
+
+      .quiz-meta 
+      { 
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px solid #e5e7eb;
+      }
+
+      .quiz-difficulty 
+      {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+
+      .difficulty-easy 
+      {
+        background: #d1fae5;
+        color: #065f2a;
+      }
+
+      .difficulty-medium 
+      {
+        background: #fef3c7;
+        color: #924819;
+      }
+
+      .difficulty-hard 
+      {
+        background: #fee2e2;
+        color: #ab1010;
+      }
+
+      .quiz-questions 
+      {
+        color: var(--muted-dark);
+        font-size: 0.9rem;
+      }
+
+      .start-btn 
+      {
+        background: var(--accent);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        margin-top: 15px;
+        width: 100%;
+      }
+
+      .start-btn:hover 
+      {
+        background: var(--accent-light);
+      }
+
+      .stats-section
+      {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      }
+
+      .stats-title 
+      {
+        font-size: 1.5rem;
+        color: var(--bg-dark);
+        margin-bottom: 20px;
+      }
+
+      .stats-grid 
+      {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+      }
+
+      .stat-card 
+      {
+        text-align: center;
+        padding: 20px;
+        background: var(--muted-light);
+        border-radius: 8px;
+      }
+
+      .stat-number 
+      {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--accent);
+        margin-bottom: 5px;
+      }
+
+      .stat-label 
+      {
+        color: var(--muted-dark);
+        font-size: 0.9rem;
+      }
+
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="#" class="logo"><img src="logo.png" alt="Clean Our Sea Logo"></a>
+      <a href="communities.html">Community</a>
+      <a href="index.html">Home</a>
+      <a href="quizzes.html" class="active">Quizzes</a>
+      <a href="#">Games</a>
+      <a href="#">Leaderboards</a>
+      <a href="#" class="map">Log in</a>
+    </nav>
+
+    <div class="quiz-container">
+      <h1 class="page-title">Ocean World Quizzes</h1>
+      <p class="page-subtitle">Take a quiz to test your knowledge and learn about the marine world and conservation efforts</p>
+
+      <!--currently static before backend is implemented to track user progress-->
+      <div class="stats-section">
+        <h2 class="stats-title">Your Progress</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number">5</div>
+            <div class="stat-label">Quizzes Completed</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">70%</div>
+            <div class="stat-label">Average Score</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">4</div>
+            <div class="stat-label">Badges Earned</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">350</div>
+            <div class="stat-label">Total Points</div>
+          </div>
+        </div>
+      </div>
+      <div class="filter-row">
+  
+  <div class="filter-left">
+    <label for="difficulty-filter">Filter by difficulty</label>
+    <select id="difficulty-filter">
+      <option value="all">All Quizzes</option>
+      <option value="easy">Easy</option>
+      <option value="medium">Medium</option>
+      <option value="hard">Hard</option>
+    </select>
+  </div>
+
+  <div class="filter-right">
+    <input type="text" id="quiz-search" placeholder="Search Quizzes...">
+  </div>
+      <div class="quiz-grid">
+        <div class="quiz-card">
+          <div class="quiz-icon">🌊</div>
+          <h3 class="quiz-title">Ocean Basics</h3>
+          <p class="quiz-description">Learn the fundamentals of ocean ecosystems, marine life, and the importance of healthy seas.</p>
+          <div class="quiz-meta">
+            <span class="quiz-difficulty difficulty-easy">Easy</span>
+            <span class="quiz-questions">10 Questions</span>
+          </div>
+          <button class="start-btn">Start Quiz</button>
+        </div>
+
+        <div class="quiz-card">
+          <div class="quiz-icon">♻️</div>
+          <h3 class="quiz-title">Plastic Pollution</h3>
+          <p class="quiz-description">Discover the impact of plastic waste on marine environments and how we can reduce it.</p>
+          <div class="quiz-meta">
+            <span class="quiz-difficulty difficulty-medium">Medium</span>
+            <span class="quiz-questions">12 Questions</span>
+          </div>
+          <button class="start-btn">Start Quiz</button>
+        </div>
+
+        <div class="quiz-card">
+          <div class="quiz-icon">🐠</div>
+          <h3 class="quiz-title">Marine Biodiversity</h3>
+          <p class="quiz-description">Explore the incredible variety of life in our oceans and why protecting aquatic life matters.</p>
+          <div class="quiz-meta">
+            <span class="quiz-difficulty difficulty-hard">Hard</span>
+            <span class="quiz-questions">15 Questions</span>
+          </div>
+          <button class="start-btn">Start Quiz</button>
+        </div>
+
+        <div class="quiz-card">
+          <div class="quiz-icon">🌡️</div>
+          <h3 class="quiz-title">Climate Change & Oceans</h3>
+          <p class="quiz-description">Understand how climate change affects ocean temperatures, currents, and ecosystems.</p>
+          <div class="quiz-meta">
+            <span class="quiz-difficulty difficulty-medium">Medium</span>
+            <span class="quiz-questions">14 Questions</span>
+          </div>
+          <button class="start-btn">Start Quiz</button>
+        </div>
+
+        <div class="quiz-card">
+          <div class="quiz-icon">🐢</div>
+          <h3 class="quiz-title">Endangered Species</h3>
+          <p class="quiz-description">Learn about threatened marine animals and what conservation efforts can help save endagered species.</p>
+          <div class="quiz-meta">
+            <span class="quiz-difficulty difficulty-hard">Hard</span>
+            <span class="quiz-questions">13 Questions</span>
+          </div>
+          <button class="start-btn">Start Quiz</button>
+        </div>
+
+        <div class="quiz-card">
+          <div class="quiz-icon">🏖️</div>
+          <h3 class="quiz-title">Beach Cleanup Expert</h3>
+          <p class="quiz-description">Master the best practices and procedures for organising and executing effective beach cleanups.</p>
+          <div class="quiz-meta">
+            <span class="quiz-difficulty difficulty-easy">Easy</span>
+            <span class="quiz-questions">10 Questions</span>
+          </div>
+          <button class="start-btn">Start Quiz</button>
+        </div>
+    <script src="quizzes.js"></script>
+  </body>
+</html>

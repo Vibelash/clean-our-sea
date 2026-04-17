@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Communities — Clean Our Sea</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/enhancements.css">
+    <link rel="stylesheet" href="css/2419616/communities.css">
+</head>
+<body>
+
+    <nav>
+        <a class="brand" href="index.html">
+            <span class="dot"></span>
+            Clean Our Sea
+        </a>
+        <a href="index.html">Home</a>
+        <a href="news.html">News</a>
+        <a href="game.html">Play</a>
+        <a href="quizzes.html">Quizzes</a>
+        <a href="communities.html" class="active">Communities</a>
+        <a href="may/map.html">Map</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <div class="spacer"></div>
+        <div id="user-chip-slot"></div>
+    </nav>
+
+    <div class="communities-container fade-up">
+        <h1 class="page-title">Communities</h1>
+        <p class="page-subtitle">Co-ordinate coastal cleanup efforts, share locations, and mobilise volunteers in real time.</p>
+
+        <div class="communities-hero">
+            <input id="search" type="search" placeholder="Search communities..." aria-label="Search communities">
+            <div class="hero-actions">
+                <button id="createBtn" class="btn primary">Create community</button>
+                <button id="resetDemo" class="btn" title="Reset demo data">Reset Demo</button>
+            </div>
+        </div>
+
+        <div class="communities-controls">
+            <div class="filters">
+                <label>Category</label>
+                <select id="category">
+                    <option value="">All</option>
+                    <option value="cleanup">Cleanup</option>
+                    <option value="research">Research</option>
+                    <option value="advocacy">Advocacy</option>
+                    <option value="education">Education</option>
+                </select>
+                <label>Sort</label>
+                <select id="sort">
+                    <option value="trending">Trending</option>
+                    <option value="newest">Newest</option>
+                    <option value="active">Most Active</option>
+                </select>
+            </div>
+            <div class="featured" id="featured"></div>
+        </div>
+
+        <div id="list" class="communities-grid fade-up-stagger"></div>
+    </div>
+
+    <!-- Create community modal -->
+    <div class="modal" id="modal" hidden>
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <h2>Create a Community</h2>
+            <form id="createForm">
+                <div class="form-group">
+                    <label for="cName">Name</label>
+                    <input id="cName" type="text" required placeholder="e.g. Brighton Beach Cleaners">
+                </div>
+                <div class="form-group">
+                    <label for="cDesc">Description</label>
+                    <textarea id="cDesc" rows="3" required placeholder="What is this community about?"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="cCategory">Category</label>
+                    <select id="cCategory">
+                        <option value="cleanup">Cleanup</option>
+                        <option value="research">Research</option>
+                        <option value="advocacy">Advocacy</option>
+                        <option value="education">Education</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn" id="cancel">Cancel</button>
+                    <button type="submit" class="btn primary">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Card template -->
+    <template id="cardTmpl">
+        <div class="community-card">
+            <div class="card-body">
+                <h3 class="title"></h3>
+                <p class="desc"></p>
+                <p class="meta"></p>
+            </div>
+            <div class="card-actions">
+                <button class="btn primary join-btn">Join</button>
+                <button class="btn delete">Delete</button>
+            </div>
+        </div>
+    </template>
+
+    <script src="js/auth.js"></script>
+    <script src="js/2419616/communities.js"></script>
+    <script src="js/enhancements.js"></script>
+    <script>document.addEventListener("DOMContentLoaded",()=>renderUserChip());</script>
+</body>
+</html>

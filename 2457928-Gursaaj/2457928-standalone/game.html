@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play — Clean Our Sea</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/enhancements.css">
+</head>
+<body>
+
+    <nav>
+        <a class="brand" href="index.html">
+            <span class="dot"></span>
+            Clean Our Sea
+        </a>
+        <a href="index.html">Home</a>
+        <a href="news.html">News</a>
+        <a href="game.html" class="active">Play</a>
+        <a href="quizzes.html">Quizzes</a>
+                <a href="communities.html">Communities</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <div class="spacer"></div>
+        <div id="user-chip-slot"></div>
+    </nav>
+
+    <div class="game-shell">
+        <div class="game-card">
+            <h1>Snake Infinity</h1>
+            <p class="game-subtitle">Eat the plastic trash to clean the sea</p>
+
+            <div class="game-scores">
+                <div class="score-box">
+                    <span class="score-label">Score</span>
+                    <span id="score" class="score-value">0</span>
+                </div>
+                <div class="score-box">
+                    <span class="score-label">Trash</span>
+                    <span id="trash" class="score-value">0</span>
+                </div>
+                <div class="score-box">
+                    <span class="score-label">Length</span>
+                    <span id="length" class="score-value">3</span>
+                </div>
+            </div>
+
+            <div class="game-grid" id="grid"></div>
+
+            <div style="text-align:center;">
+                <div class="effect-banner" id="effect-banner" aria-live="polite">
+                    <span class="effect-banner-name" id="effect-name">—</span>
+                    <span class="effect-banner-timer" id="effect-timer">0.0s</span>
+                </div>
+            </div>
+
+            <div class="game-message" id="message">
+                Press an arrow key to dive in
+            </div>
+
+            <div class="game-controls">
+                <button id="start-btn">Start game</button>
+                <button id="reset-btn">Reset</button>
+            </div>
+
+            <div class="instructions">
+                <h3>How to play</h3>
+                <ul>
+                    <li>Use the <strong>arrow keys</strong> (or WASD) to steer the snake.</li>
+                    <li>Each piece of plastic trash is worth <strong>+10 points</strong>.</li>
+                    <li>
+                        Every <strong>50 points</strong> a random effect kicks in for a few seconds —
+                        Double Points, Calm Waters, Fast Tide, Trash Storm, or Ghost Mode.
+                    </li>
+                    <li>Don't crash into yourself — that ends the round (unless Ghost Mode is active).</li>
+                    <li>Press <strong>Space</strong> to pause and <strong>R</strong> to reset.</li>
+                    <li>When you lose, your score is saved to the community leaderboard.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Leaderboard card -->
+        <div class="side-card leaderboard-card">
+            <div class="side-card-head">
+                <h2>Leaderboard</h2>
+                <button class="ghost-btn" id="refresh-lb" title="Refresh">&#x21bb;</button>
+            </div>
+            <p class="side-card-sub">Top 10 ocean-cleaners</p>
+            <ol id="leaderboard" class="leaderboard-list">
+                <li class="lb-empty">Loading…</li>
+            </ol>
+        </div>
+
+        <!-- Community impact card -->
+        <div class="side-card impact-card">
+            <div class="side-card-head">
+                <h2>Community impact</h2>
+            </div>
+            <p class="side-card-sub">How much virtual plastic we've cleaned together</p>
+            <div class="impact-stat" id="impact-stat">
+                <span class="impact-number" id="impact-pieces">—</span>
+                <span class="impact-label">pieces of plastic</span>
+            </div>
+            <p id="impact-comparison" class="impact-comparison" hidden></p>
+            <p id="impact-message" class="impact-message">Loading community stats…</p>
+        </div>
+
+        <!-- Why it matters / crisis card -->
+        <div class="side-card crisis-card">
+            <div class="side-card-head">
+                <h2>Why it matters</h2>
+                <button class="ghost-btn" id="learn-more-btn" title="Learn more about SDG 14">?</button>
+            </div>
+            <p class="side-card-sub">The real problem behind the game</p>
+
+            <div class="crisis-fact-wrap">
+                <button class="crisis-nav prev" id="crisis-prev" aria-label="Previous fact">&lsaquo;</button>
+                <div class="crisis-fact">
+                    <span class="crisis-number" id="crisis-number">—</span>
+                    <span class="crisis-label" id="crisis-label">Loading…</span>
+                </div>
+                <button class="crisis-nav next" id="crisis-next" aria-label="Next fact">&rsaquo;</button>
+            </div>
+            <p class="crisis-source" id="crisis-source">&nbsp;</p>
+            <div class="crisis-dots" id="crisis-dots"></div>
+
+            <div class="crisis-goal">
+                <div class="crisis-goal-head">
+                    <span>Our community progress</span>
+                    <span id="crisis-goal-value">0 / 1,000</span>
+                </div>
+                <div class="crisis-goal-bar">
+                    <div class="crisis-goal-fill" id="crisis-goal-fill" style="width: 0%"></div>
+                </div>
+                <p class="crisis-goal-note">
+                    Symbolic target: 1,000 virtual pieces cleaned together.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Learn more modal (SDG 14 deep dive) -->
+    <div id="crisis-modal" class="modal" aria-hidden="true">
+        <div class="modal-backdrop" data-close-crisis></div>
+        <div class="modal-panel crisis-modal-panel" role="dialog" aria-modal="true" aria-labelledby="crisis-modal-title">
+            <button class="modal-close" data-close-crisis aria-label="Close">&times;</button>
+
+            <div class="crisis-modal-head">
+                <div class="crisis-modal-badge">SDG 14</div>
+                <h2 id="crisis-modal-title">Life Below Water</h2>
+                <p class="crisis-modal-sub">
+                    Conserve and sustainably use the oceans, seas and marine resources
+                    for sustainable development.
+                </p>
+            </div>
+
+            <h3 class="section-title">The problem</h3>
+            <ul class="crisis-stats">
+                <li>
+                    <span class="crisis-stat-num">8M tonnes</span>
+                    <span class="crisis-stat-desc">of plastic enter the ocean every year.</span>
+                    <span class="crisis-stat-src">UN Environment Programme</span>
+                </li>
+                <li>
+                    <span class="crisis-stat-num">800+ species</span>
+                    <span class="crisis-stat-desc">of marine life are affected by ocean debris.</span>
+                    <span class="crisis-stat-src">UNESCO-IOC</span>
+                </li>
+                <li>
+                    <span class="crisis-stat-num">5.25 trillion</span>
+                    <span class="crisis-stat-desc">plastic pieces already float in our oceans.</span>
+                    <span class="crisis-stat-src">PLOS ONE, 2014</span>
+                </li>
+                <li>
+                    <span class="crisis-stat-num">450 years</span>
+                    <span class="crisis-stat-desc">is how long a single plastic bottle can take to decompose.</span>
+                    <span class="crisis-stat-src">NOAA</span>
+                </li>
+                <li>
+                    <span class="crisis-stat-num">1 in 3</span>
+                    <span class="crisis-stat-desc">fish caught for human consumption contains plastic.</span>
+                    <span class="crisis-stat-src">University of Plymouth</span>
+                </li>
+            </ul>
+
+            <h3 class="section-title">What this game is doing about it</h3>
+            <p class="crisis-modal-body">
+                Snake Infinity isn't cleaning real plastic — but it turns the abstract
+                crisis into something you can feel. Every round you play, every piece
+                of trash your snake collects, is tracked by our backend and added to a
+                shared community total. The goal is simple: make the scale of the
+                problem tangible, and make the act of "cleaning" feel collective.
+            </p>
+
+            <div class="modal-footer">
+                <button class="ghost-btn" data-close-crisis>Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Player detail modal (used for both "my account" and "other player") -->
+    <div id="account-modal" class="modal" aria-hidden="true">
+        <div class="modal-backdrop" data-close-modal></div>
+        <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="account-title">
+            <button class="modal-close" data-close-modal aria-label="Close">&times;</button>
+
+            <div class="account-header">
+                <div class="account-avatar" id="account-avatar">?</div>
+                <div class="account-header-text">
+                    <h2 id="account-title">Player</h2>
+                    <p class="account-email" id="account-email" hidden>—</p>
+                    <p class="account-since" id="account-since" hidden>Signed in just now</p>
+                    <span class="you-badge" id="you-badge" hidden>You</span>
+                </div>
+            </div>
+
+            <h3 class="section-title" id="stats-title">Stats</h3>
+            <div id="account-stats-loading" class="account-loading">Loading stats…</div>
+            <div id="account-stats" class="account-stats" hidden>
+                <div class="stat-tile">
+                    <span class="stat-label">Highest</span>
+                    <span class="stat-value" id="stat-highest">0</span>
+                </div>
+                <div class="stat-tile">
+                    <span class="stat-label">Average</span>
+                    <span class="stat-value" id="stat-average">0</span>
+                </div>
+                <div class="stat-tile">
+                    <span class="stat-label">Total</span>
+                    <span class="stat-value" id="stat-total">0</span>
+                </div>
+                <div class="stat-tile">
+                    <span class="stat-label">Games</span>
+                    <span class="stat-value" id="stat-games">0</span>
+                </div>
+            </div>
+            <p id="account-stats-empty" class="account-empty" hidden>
+                This player hasn't finished a game yet.
+            </p>
+
+            <h3 class="section-title" id="history-title">Score history</h3>
+            <ol id="history-list" class="history-list">
+                <li class="history-empty">Loading…</li>
+            </ol>
+
+            <div class="modal-footer">
+                <button class="ghost-btn" data-close-modal>Close</button>
+                <button class="danger-btn" id="logout-btn" onclick="logoutUser()" hidden>Log out</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/game.js"></script>
+    <!-- OPTIONAL visual flourish layer. Safe to remove: the game
+         runs fine without it. -->
+    <script src="js/effects.js"></script>
+    <script src="js/enhancements.js"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+# Build output — regenerate with build.sh
+/deploy/
+
+# Maven build artifacts
+**/target/
+
+# Runtime logs
+backend.log
+*.log
+
+# Editor / IDE
+.vscode/
+.DS_Store
+
+# Node
+node_modules/
+
+# H2 DB file (user-home default)
+*.mv.db
+*.trace.db

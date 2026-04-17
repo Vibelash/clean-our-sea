@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register — Snake Infinity</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <nav>
+        <a class="brand" href="index.html">
+            <span class="dot"></span>
+            Snake Infinity
+        </a>
+        <a href="index.html">Home</a>
+        <a href="game.html">Play</a>
+        <a href="news.html">News</a>
+        <a href="login.html">Log in</a>
+        <a href="register.html" class="active">Register</a>
+        <div class="spacer"></div>
+    </nav>
+
+    <div class="auth-shell">
+        <div class="auth-card">
+            <h1>Create your account</h1>
+            <p class="subtitle">Join the community cleaning up the ocean, one score at a time.</p>
+
+            <div id="message" class="message"></div>
+
+            <form id="register-form" novalidate>
+                <div class="form-group">
+                    <label for="name">Display name</label>
+                    <input type="text" id="name" name="name" autocomplete="name" required maxlength="40">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" autocomplete="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" autocomplete="new-password" required minlength="8">
+                </div>
+
+                <div class="form-group">
+                    <label for="rep-password">Confirm password</label>
+                    <input type="password" id="rep-password" name="rep-password" autocomplete="new-password" required minlength="8">
+                </div>
+
+                <div class="form-row">
+                    <label>
+                        <input type="checkbox" id="tos" required>
+                        I agree to the <a href="#" onclick="event.preventDefault()">Terms</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="primary-btn">Create account</button>
+            </form>
+
+            <p class="auth-footer">
+                Already have an account? <a href="login.html">Log in</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/register.js"></script>
+</body>
+</html>

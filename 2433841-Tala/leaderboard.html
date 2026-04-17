@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard — Clean Our Sea</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/enhancements.css">
+    <link rel="stylesheet" href="css/2433841/leaderboard.css">
+</head>
+<body>
+
+    <nav>
+        <a class="brand" href="index.html">
+            <span class="dot"></span>
+            Clean Our Sea
+        </a>
+        <a href="index.html">Home</a>
+        <a href="news.html">News</a>
+        <a href="game.html">Play</a>
+        <a href="quizzes.html">Quizzes</a>
+        <a href="communities.html">Communities</a>
+        <a href="may/map.html">Map</a>
+        <a href="leaderboard.html" class="active">Leaderboard</a>
+        <div class="spacer"></div>
+        <div id="user-chip-slot"></div>
+    </nav>
+
+    <div class="leaderboard-container fade-up">
+        <h1 class="page-title">Leaderboard</h1>
+        <p class="page-subtitle">Track top contributors and compete for the crown</p>
+
+        <!-- Weekly Quota -->
+        <section id="weekly-quota-section" class="fade-up">
+            <div class="quota-container">
+                <h2>Weekly Goal</h2>
+                <div class="quota-display">
+                    <div class="quota-stat">
+                        <span class="quota-label">Goal</span>
+                        <span id="quota-value" class="quota-number">0</span>
+                    </div>
+                    <div class="quota-stat">
+                        <span class="quota-label">Points This Week</span>
+                        <span id="weekly-points" class="quota-number">120</span>
+                    </div>
+                </div>
+                <div class="progress-bar-container">
+                    <div id="progress-bar"></div>
+                </div>
+                <div class="quota-input">
+                    <input id="quota-input-field" type="number" placeholder="Set your weekly goal" min="1">
+                    <button id="set-quota-btn" class="btn primary" type="button">Set Goal</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Activity Submission -->
+        <section id="submission-section" class="fade-up">
+            <div class="submission-container">
+                <h2>Report Cleanup Activity</h2>
+                <form id="cleanup-form">
+                    <input type="text" id="location-input" placeholder="Location (e.g. Brighton Beach)" required>
+                    <input type="number" id="weight-input" placeholder="Weight collected (kg)" min="0.1" step="0.1" required>
+                    <button type="submit" class="btn primary">Submit Activity</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Tab buttons -->
+        <div class="tab-buttons fade-up">
+            <button id="daily-tab" class="active">Daily</button>
+            <button id="yearly-tab">Yearly</button>
+            <div id="timer" class="timer-badge">
+                <span id="countdown">01:00:00</span>
+            </div>
+        </div>
+
+        <!-- Filter -->
+        <div class="filter fade-up">
+            <label for="country-filter">Filter by area:</label>
+            <select id="country-filter">
+                <option value="all">All Areas</option>
+                <option value="London">London</option>
+                <option value="Bristol">Bristol</option>
+                <option value="Southampton">Southampton</option>
+            </select>
+        </div>
+
+        <!-- Top 3 -->
+        <div id="top-three" class="fade-up"></div>
+
+        <!-- Leaderboard Table -->
+        <div id="leaderboard" class="leaderboard-card fade-up">
+            <h2>Rankings</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Followers</th>
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/2433841/leaderboard.js"></script>
+    <script src="js/enhancements.js"></script>
+    <script>document.addEventListener("DOMContentLoaded",()=>renderUserChip());</script>
+</body>
+</html>

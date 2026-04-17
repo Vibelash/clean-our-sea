@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "Brighton Coastal Volunteers",
+    "desc": "Local volunteers coordinating beach cleanups and trash pickups across Brighton shoreline.",
+    "members": 124,
+    "tags": ["cleanup"]
+  },
+  {
+    "id": 2,
+    "name": "Marine Research Network",
+    "desc": "Researchers sharing data on microplastics, species impact, and survey results.",
+    "members": 86,
+    "tags": ["research"]
+  },
+  {
+    "id": 3,
+    "name": "Policy & Advocacy",
+    "desc": "Groups coordinating advocacy campaigns and local policy pushes to reduce single-use plastics.",
+    "members": 42,
+    "tags": ["policy"]
+  }
+]

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community — Clean Our Sea</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/enhancements.css">
+    <link rel="stylesheet" href="css/2419616/communities.css">
+</head>
+<body>
+
+    <nav>
+        <a class="brand" href="index.html">
+            <span class="dot"></span>
+            Clean Our Sea
+        </a>
+        <a href="index.html">Home</a>
+        <a href="news.html">News</a>
+        <a href="game.html">Play</a>
+        <a href="quizzes.html">Quizzes</a>
+        <a href="communities.html" class="active">Communities</a>
+        <a href="may/map.html">Map</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <div class="spacer"></div>
+        <div id="user-chip-slot"></div>
+    </nav>
+
+    <div class="communities-container fade-up">
+        <a href="communities.html" class="back-link">&larr; Back to Communities</a>
+
+        <div class="detail-card" id="detail">
+            <h1 id="name">Loading...</h1>
+            <p id="desc"></p>
+            <p id="meta" class="meta"></p>
+            <button id="joinBtn" class="btn primary">Join &amp; Chat</button>
+        </div>
+
+        <div class="posts-card" id="feed">
+            <h2>Recent Posts</h2>
+            <div id="posts"><p class="text-hint">Loading posts...</p></div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/enhancements.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        renderUserChip();
+
+        // Combined backend origin for clean-our-sea-local.
+        const BACKEND = "http://localhost:8080";
+
+        function qs(name) {
+            return new URLSearchParams(location.search).get(name);
+        }
+        const id = qs("id");
+        if (!id) { location.href = "communities.html"; return; }
+
+        async function fetchCommunity(cid) {
+            try {
+                const r = await fetch(BACKEND + "/api/communities/" + cid);
+                if (!r.ok) throw new Error();
+                return await r.json();
+            } catch {
+                // fallback to sample data
+                const r2 = await fetch("data/2419616/communities.json");
+                const all = await r2.json();
+                return all.find(c => String(c.id) === String(cid));
+            }
+        }
+
+        async function fetchPosts(cid) {
+            try {
+                const r = await fetch(BACKEND + "/api/communities/" + cid + "/posts");
+                if (!r.ok) throw new Error();
+                return await r.json();
+            } catch { return []; }
+        }
+
+        function timeAgo(iso) {
+            const diff = Date.now() - new Date(iso).getTime();
+            const mins = Math.floor(diff / 60000);
+            if (mins < 60) return mins + "m ago";
+            const hrs = Math.floor(mins / 60);
+            if (hrs < 24) return hrs + "h ago";
+            return Math.floor(hrs / 24) + "d ago";
+        }
+
+        function renderPosts(posts) {
+            const container = document.getElementById("posts");
+            if (!posts.length) {
+                container.innerHTML = '<p class="text-hint">No posts yet. Join and start the conversation!</p>';
+                return;
+            }
+            container.innerHTML = posts.map(p => `
+                <article class="post">
+                    <strong>${p.author || "Anon"}</strong>
+                    <span class="meta">${p.createdAt ? timeAgo(p.createdAt) : ""}</span>
+                    <p>${p.text || p.content || ""}</p>
+                </article>
+            `).join("");
+        }
+
+        (async () => {
+            const c = await fetchCommunity(id);
+            if (c) {
+                document.getElementById("name").textContent = c.name;
+                document.getElementById("desc").textContent = c.desc || c.description || "";
+                document.getElementById("meta").textContent =
+                    (c.members || 0) + " members" + (c.tags ? " · " + c.tags.join(", ") : "");
+                document.title = c.name + " — Clean Our Sea";
+            }
+            const posts = await fetchPosts(id);
+            renderPosts(posts);
+        })();
+
+        document.getElementById("joinBtn").addEventListener("click", async () => {
+            try { await fetch(BACKEND + "/api/communities/" + id + "/join", { method: "POST" }); } catch {}
+            location.href = "chat.html?id=" + id + "&name=" + encodeURIComponent(
+                document.getElementById("name").textContent
+            );
+        });
+    });
+    </script>
+</body>
+</html>
