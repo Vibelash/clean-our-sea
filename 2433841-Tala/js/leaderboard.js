@@ -187,7 +187,7 @@ function updateProgressBar() {
 
 updateProgressBar();
 
-document.getElementById('cleanup-form').addEventListener('submit', (e) => {
+/*document.getElementById('cleanup-form').addEventListener('submit', (e) => {
 
     e.preventDefault();
 
@@ -210,7 +210,7 @@ document.getElementById('cleanup-form').addEventListener('submit', (e) => {
     alert(`Activity submitted! You earned ${pointsEarned} points.`);
 
     document.getElementById('cleanup-form').reset();
-});
+});*/
 
 populateLeaderboard(dailyData);
 startCountdown();
