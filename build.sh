@@ -35,11 +35,14 @@ cp "$SRC/2419616-Tarun/communities.html"    "$DST/"
 cp "$SRC/2419616-Tarun/community.html"      "$DST/"
 cp "$SRC/2419616-Tarun/README.md"           "$DST/"
 cp "$SRC/2433841-Tala/leaderboard.html"     "$DST/"
-cp "$SRC/2335984-Daniel/quizzes.html"       "$DST/"
+cp "$SRC/2335984-Daniel/frontend/quizzes.html"   "$DST/"
+cp "$SRC/2335984-Daniel/frontend/quiz-page.html" "$DST/"
+cp "$SRC/2335984-Daniel/frontend/logo.png"       "$DST/"
 cp "$SRC/2457928-Gursaaj/game.html"         "$DST/"
 cp "$SRC/2457928-Gursaaj/login.html"        "$DST/"
 cp "$SRC/2457928-Gursaaj/register.html"     "$DST/"
 cp "$SRC/2457928-Gursaaj/news.html"         "$DST/"
+cp "$SRC/2457928-Gursaaj/profile.html"      "$DST/"
 
 # ---- CSS ----
 # Student-ID subfolders kept (HTML references them at these paths):
@@ -49,7 +52,9 @@ cp "$SRC/2433841-Tala/css/leaderboard.css"      "$DST/css/2433841/"
 cp "$SRC/2433841-Tala/css/leaderboard.css.min"  "$DST/css/2433841/"
 # Shared / top-level CSS (HTML references as css/*.css):
 cp "$SRC/2433841-Tala/css/style.css"            "$DST/css/"
-cp "$SRC/2335984-Daniel/css/quizzes.css"        "$DST/css/"
+# Daniel's quizzes.html has inline styles so no quizzes.css to copy;
+# quiz-page.html links quiz-page.css at the root, same as the js files:
+cp "$SRC/2335984-Daniel/frontend/quiz-page.css" "$DST/"
 cp "$SRC/shared/css/enhancements.css"           "$DST/css/"
 
 # ---- JavaScript ----
@@ -63,10 +68,13 @@ cp "$SRC/2457928-Gursaaj/js/game.js"        "$DST/js/"
 cp "$SRC/2457928-Gursaaj/js/login.js"       "$DST/js/"
 cp "$SRC/2457928-Gursaaj/js/news.js"        "$DST/js/"
 cp "$SRC/2457928-Gursaaj/js/register.js"    "$DST/js/"
+cp "$SRC/2457928-Gursaaj/js/profile.js"     "$DST/js/"
 cp "$SRC/shared/js/effects.js"              "$DST/js/"
 cp "$SRC/shared/js/enhancements.js"         "$DST/js/"
-# quizzes.js lives at public/ root (not inside public/js/) — matches original deploy:
-cp "$SRC/2335984-Daniel/js/quizzes.js"      "$DST/"
+# quizzes.js + quiz-page.js live at public/ root (not inside public/js/) — matches
+# how quizzes.html and quiz-page.html reference them:
+cp "$SRC/2335984-Daniel/frontend/quizzes.js"   "$DST/"
+cp "$SRC/2335984-Daniel/frontend/quiz-page.js" "$DST/"
 
 # ---- Data ----
 cp "$SRC/2419616-Tarun/data/communities.json" "$DST/data/2419616/"

@@ -1,74 +1,106 @@
-// Search functionality - filters quizzes as you type
-const searchInput = document.getElementById('quiz-search');
+// Clean Our Sea — Quizzes listing page.
+// Filters by difficulty, searches by title/description, and navigates
+// to quiz-page.html with the backend quiz id + title when Start is clicked.
 
-searchInput.addEventListener('input', function() 
+const BACKEND       = 'http://localhost:8080';
+const quizCards     = document.querySelectorAll('.quiz-card');
+const quizCounter   = document.getElementById('quiz-counter');
+const searchInput   = document.getElementById('quiz-search');
+const filterDropdown = document.getElementById('difficulty-filter');
+
+let activeDifficulty = 'all';
+let activeSearch     = '';
+
+function applyFilters()
 {
-  const searchTerm = this.value.toLowerCase();
-  let visibleCount = 0;
-  
-  quizCards.forEach(card => 
-    {
-    const title = card.querySelector('.quiz-title').textContent.toLowerCase();
+  let visible = 0;
+
+  quizCards.forEach(card =>
+  {
+    const title       = card.querySelector('.quiz-title').textContent.toLowerCase();
     const description = card.querySelector('.quiz-description').textContent.toLowerCase();
-    
-    // check if search term is in title or description
-    if (title.includes(searchTerm) || description.includes(searchTerm)) 
-      {
+    const difficulty  = card.querySelector('.quiz-difficulty').textContent.toLowerCase();
+
+    const matchesDifficulty = activeDifficulty === 'all' || difficulty === activeDifficulty;
+    const matchesSearch     = !activeSearch
+      || title.includes(activeSearch)
+      || description.includes(activeSearch);
+
+    if (matchesDifficulty && matchesSearch)
+    {
       card.style.display = 'block';
-      visibleCount++;
-    } 
-    else 
+      visible++;
+    }
+    else
     {
       card.style.display = 'none';
     }
   });
-  
-  // update counter
-  quizCounter.textContent = visibleCount;
-});
-// filter function that allows users to sort quizzes by difficulty
-const filterDropdown = document.getElementById('difficulty-filter');
-const quizCards = document.querySelectorAll('.quiz-card');
 
-//listens for when the users changers the dropdown choice
-filterDropdown.addEventListener('change', function() 
+  if (quizCounter) quizCounter.textContent = visible;
+}
+
+searchInput.addEventListener('input', function ()
 {
-  const selectedDifficulty = this.value;
-  
-  quizCards.forEach(card => //loops through each card to check if it matches filer
-    { 
-    const difficulty = card.querySelector('.quiz-difficulty').textContent.toLowerCase();
-    
-    if (selectedDifficulty === 'all') 
-    {
-      card.style.display = 'block';
-    } 
-
-      else if (difficulty === selectedDifficulty)
-      {
-      card.style.display = 'block';
-      } 
-   // hide cards that don't match
-        else 
-        {
-      card.style.display = 'none';
-        }
-  }); 
+  activeSearch = this.value.toLowerCase();
+  applyFilters();
 });
 
+filterDropdown.addEventListener('change', function ()
+{
+  activeDifficulty = this.value;
+  applyFilters();
+});
 
-//this handles clicking the start button for quizzes
-document.querySelectorAll('.start-btn').forEach(button => 
+// Start button → open quiz-page.html with the backend quiz id + title.
+document.querySelectorAll('.start-btn').forEach(button =>
+{
+  button.addEventListener('click', function (e)
   {
-  button.addEventListener('click', function(e) 
-  { 
     e.stopPropagation();
-    const card = this.closest('.quiz-card');
-    const quizTitle = card.querySelector('.quiz-title').textContent;
-    //shows alert with quiz name and will open another quiz page when back end is fully integrated
-    alert(`Starting quiz: ${quizTitle}\n\nIn progress quiz page with questions`);
+    const card     = this.closest('.quiz-card');
+    const quizId   = card.getAttribute('data-quiz-id');
+    const quizName = card.querySelector('.quiz-title').textContent.trim();
+
+    if (!quizId)
+    {
+      alert('This quiz is not available — the backend may be offline.');
+      return;
+    }
+
+    window.location.href =
+      `quiz-page.html?id=${encodeURIComponent(quizId)}&title=${encodeURIComponent(quizName)}`;
   });
 });
 
+// H2 persists the auto-increment sequence across restarts, so the quiz IDs
+// in the DB drift over time (1..6, 7..12, 13..18, ...). Hardcoded data-quiz-id
+// values would stop matching real rows. On load, fetch the real list from the
+// backend and remap each card by title.
+fetch(`${BACKEND}/quiz`)
+  .then(r => r.ok ? r.json() : [])
+  .then(list =>
+  {
+    const byTitle = {};
+    for (const q of list) byTitle[q.title] = q.quizId;
 
+    quizCards.forEach(card =>
+    {
+      const title = card.querySelector('.quiz-title').textContent.trim();
+      if (byTitle[title] != null)
+      {
+        card.setAttribute('data-quiz-id', byTitle[title]);
+      }
+      else
+      {
+        // No matching quiz in the backend — disable the start button.
+        card.removeAttribute('data-quiz-id');
+      }
+    });
+  })
+  .catch(err =>
+  {
+    console.warn('Could not fetch quiz list from backend:', err);
+  });
 
+applyFilters();

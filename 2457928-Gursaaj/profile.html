@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile — Clean Our Sea</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/enhancements.css">
+</head>
+<body>
+
+    <nav>
+        <a class="brand" href="index.html">
+            <span class="dot"></span>
+            Clean Our Sea
+        </a>
+        <a href="index.html">Home</a>
+        <a href="news.html">News</a>
+        <a href="game.html">Play</a>
+        <a href="quizzes.html">Quizzes</a>
+        <a href="communities.html">Communities</a>
+        <a href="may/map.html">Map</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <div class="spacer"></div>
+        <div id="user-chip-slot"></div>
+    </nav>
+
+    <div class="auth-shell">
+        <div class="auth-card" style="max-width: 640px;">
+            <div class="account-header">
+                <div class="account-avatar" id="profile-avatar">?</div>
+                <div class="account-header-text">
+                    <h2 id="profile-name">Player</h2>
+                    <p class="account-email" id="profile-email">—</p>
+                    <p class="account-since" id="profile-since">Signed in just now</p>
+                    <span class="you-badge">You</span>
+                </div>
+            </div>
+
+            <h3 class="section-title">Your stats</h3>
+            <div id="profile-stats-loading" class="account-loading">Loading stats…</div>
+            <div id="profile-stats" class="account-stats" hidden>
+                <div class="stat-tile">
+                    <span class="stat-label">Highest</span>
+                    <span class="stat-value" id="stat-highest">0</span>
+                </div>
+                <div class="stat-tile">
+                    <span class="stat-label">Average</span>
+                    <span class="stat-value" id="stat-average">0</span>
+                </div>
+                <div class="stat-tile">
+                    <span class="stat-label">Total</span>
+                    <span class="stat-value" id="stat-total">0</span>
+                </div>
+                <div class="stat-tile">
+                    <span class="stat-label">Games</span>
+                    <span class="stat-value" id="stat-games">0</span>
+                </div>
+            </div>
+            <p id="profile-stats-empty" class="account-empty" hidden>
+                You haven't finished a game yet. Play a round to see your stats here.
+            </p>
+
+            <h3 class="section-title">Your score history</h3>
+            <ol id="profile-history" class="history-list">
+                <li class="history-empty">Loading…</li>
+            </ol>
+
+            <div class="modal-footer" style="border-top:1px solid #eef3f7; padding-top:16px; margin-top:10px;">
+                <a href="game.html" class="ghost-btn" style="text-decoration:none; display:inline-block;">Play a round</a>
+                <button class="danger-btn" id="logout-btn">Log out</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+</html>

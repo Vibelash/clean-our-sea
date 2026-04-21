@@ -10,36 +10,8 @@
   --yellow:       #f59e0b;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  background: var(--muted-light);
-  min-height: 100vh;
-  color: var(--bg-dark);
-}
-
-/* ── NAV ─────────────────────────────────────────────────────────────────── */
-nav {
-  background: white; padding: 15px 30px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  position: sticky; top: 0; z-index: 100;
-  display: flex; justify-content: center; align-items: center; gap: 40px;
-}
-nav a {
-  display: inline-block; padding: 10px 16px; border-radius: 8px;
-  color: #4a4a4d; font-weight: 500; text-decoration: none;
-  transition: 0.3s ease; position: relative;
-}
-nav a:hover { background: rgba(0,0,0,0.08); }
-nav a::after {
-  content: ""; display: block; height: 3px; width: 0%;
-  background: #070f2c; transition: 0.3s ease;
-  margin: 0 auto; border-radius: 10px;
-}
-nav a:hover::after, nav a.active::after { width: 80%; }
-nav a.logo img { height: 30px; width: auto; display: block; }
-.map { border: 2px solid #070f2c; border-radius: 4px; padding: 2px 2rem; color: #070f2c; }
+/* Shared site CSS (linked from quiz-page.html) owns body + nav styles.
+   Everything below is quiz-specific. */
 
 /* ── WRAPPER ─────────────────────────────────────────────────────────────── */
 .quiz-wrapper {
@@ -55,6 +27,7 @@ nav a.logo img { height: 30px; width: auto; display: block; }
 #loading-screen {
   text-align: center;
   padding: 80px 20px;
+  color: var(--white);
 }
 .loading-spinner {
   width: 48px; height: 48px;
@@ -79,9 +52,9 @@ nav a.logo img { height: 30px; width: auto; display: block; }
 .back-btn:hover { border-color: var(--accent); color: var(--accent); }
 
 #quiz-title-label {
-  font-size: 1.2rem; font-weight: 700; color: var(--bg-dark); flex: 1;
+  font-size: 1.2rem; font-weight: 700; color: var(--white); flex: 1;
 }
-.progress-label { font-size: 0.85rem; color: var(--muted-dark); white-space: nowrap; }
+.progress-label { font-size: 0.85rem; color: rgba(255,255,255,0.8); white-space: nowrap; }
 
 /* ── PROGRESS BAR ────────────────────────────────────────────────────────── */
 .progress-bar-track {

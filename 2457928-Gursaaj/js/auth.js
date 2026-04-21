@@ -117,9 +117,9 @@ function requireAuth() {
 
 /**
  * Render the logged-in user chip into any element with id="user-chip-slot".
- * If an `onChipClick` callback is provided, the chip becomes clickable
- * (used by game.html to open the account info modal).
- * Call after DOMContentLoaded.
+ * By default the chip links to profile.html so it's clickable from any page.
+ * If an `onChipClick` callback is provided, that takes precedence (e.g. an
+ * in-page modal). Call after DOMContentLoaded.
  */
 function renderUserChip(onChipClick) {
     const session = getSession();
@@ -136,16 +136,38 @@ function renderUserChip(onChipClick) {
 
     const initial = (session.name || session.email)[0].toUpperCase();
     const displayName = session.name || session.email;
-    const clickable = typeof onChipClick === "function";
+    const hasCallback = typeof onChipClick === "function";
 
-    slot.innerHTML = `
-        <div class="user-chip${clickable ? " clickable" : ""}" id="user-chip" ${clickable ? 'title="View account"' : ""}>
-            <div class="avatar">${initial}</div>
-            <span>${displayName}</span>
-        </div>
-    `;
-
-    if (clickable) {
+    if (hasCallback) {
+        slot.innerHTML = `
+            <div class="user-chip clickable" id="user-chip" title="View account">
+                <div class="avatar">${initial}</div>
+                <span>${displayName}</span>
+            </div>
+        `;
         document.getElementById("user-chip").addEventListener("click", onChipClick);
+    } else {
+        slot.innerHTML = `
+            <a href="profile.html" class="user-chip clickable" id="user-chip" title="View profile" style="text-decoration:none;">
+                <div class="avatar">${initial}</div>
+                <span>${displayName}</span>
+            </a>
+        `;
     }
+}
+
+/**
+ * Humanise an ISO timestamp as "just now" / "N min ago" / "N hr ago" / "N days ago".
+ * Shared by profile.js and game.js.
+ */
+function formatSince(iso) {
+    if (!iso) return "just now";
+    const diffMs = Date.now() - new Date(iso).getTime();
+    const mins = Math.floor(diffMs / 60000);
+    if (mins < 1)  return "just now";
+    if (mins < 60) return mins + " min ago";
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24)  return hrs + " hr ago";
+    const days = Math.floor(hrs / 24);
+    return days + " day" + (days === 1 ? "" : "s") + " ago";
 }

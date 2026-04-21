@@ -31,11 +31,14 @@ copy /Y "%ROOT%2419616-Tarun\communities.html"  "%DST%\"              >nul
 copy /Y "%ROOT%2419616-Tarun\community.html"    "%DST%\"              >nul
 copy /Y "%ROOT%2419616-Tarun\README.md"         "%DST%\"              >nul
 copy /Y "%ROOT%2433841-Tala\leaderboard.html"   "%DST%\"              >nul
-copy /Y "%ROOT%2335984-Daniel\quizzes.html"     "%DST%\"              >nul
+copy /Y "%ROOT%2335984-Daniel\frontend\quizzes.html"   "%DST%\"      >nul
+copy /Y "%ROOT%2335984-Daniel\frontend\quiz-page.html" "%DST%\"      >nul
+copy /Y "%ROOT%2335984-Daniel\frontend\logo.png"       "%DST%\"      >nul
 copy /Y "%ROOT%2457928-Gursaaj\game.html"       "%DST%\"              >nul
 copy /Y "%ROOT%2457928-Gursaaj\login.html"      "%DST%\"              >nul
 copy /Y "%ROOT%2457928-Gursaaj\register.html"   "%DST%\"              >nul
 copy /Y "%ROOT%2457928-Gursaaj\news.html"       "%DST%\"              >nul
+copy /Y "%ROOT%2457928-Gursaaj\profile.html"    "%DST%\"              >nul
 
 REM ---- CSS ----
 copy /Y "%ROOT%2419616-Tarun\css\communities.css"     "%DST%\css\2419616\" >nul
@@ -43,7 +46,7 @@ copy /Y "%ROOT%2419616-Tarun\css\communities.css.min" "%DST%\css\2419616\" >nul
 copy /Y "%ROOT%2433841-Tala\css\leaderboard.css"      "%DST%\css\2433841\" >nul
 copy /Y "%ROOT%2433841-Tala\css\leaderboard.css.min"  "%DST%\css\2433841\" >nul
 copy /Y "%ROOT%2433841-Tala\css\style.css"            "%DST%\css\"         >nul
-copy /Y "%ROOT%2335984-Daniel\css\quizzes.css"        "%DST%\css\"         >nul
+copy /Y "%ROOT%2335984-Daniel\frontend\quiz-page.css" "%DST%\"            >nul
 copy /Y "%ROOT%shared\css\enhancements.css"           "%DST%\css\"         >nul
 
 REM ---- JavaScript ----
@@ -55,10 +58,12 @@ copy /Y "%ROOT%2457928-Gursaaj\js\game.js"       "%DST%\js\"         >nul
 copy /Y "%ROOT%2457928-Gursaaj\js\login.js"      "%DST%\js\"         >nul
 copy /Y "%ROOT%2457928-Gursaaj\js\news.js"       "%DST%\js\"         >nul
 copy /Y "%ROOT%2457928-Gursaaj\js\register.js"   "%DST%\js\"         >nul
+copy /Y "%ROOT%2457928-Gursaaj\js\profile.js"    "%DST%\js\"         >nul
 copy /Y "%ROOT%shared\js\effects.js"             "%DST%\js\"         >nul
 copy /Y "%ROOT%shared\js\enhancements.js"        "%DST%\js\"         >nul
-REM quizzes.js lives at public\ root (not inside public\js\) -- matches original deploy
-copy /Y "%ROOT%2335984-Daniel\js\quizzes.js"     "%DST%\"            >nul
+REM quizzes.js + quiz-page.js live at public\ root (not inside public\js\) -- matches how quizzes.html/quiz-page.html reference them
+copy /Y "%ROOT%2335984-Daniel\frontend\quizzes.js"   "%DST%\"       >nul
+copy /Y "%ROOT%2335984-Daniel\frontend\quiz-page.js" "%DST%\"       >nul
 
 REM ---- Data ----
 copy /Y "%ROOT%2419616-Tarun\data\communities.json" "%DST%\data\2419616\" >nul

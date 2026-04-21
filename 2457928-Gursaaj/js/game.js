@@ -72,7 +72,6 @@ const statTotalEl        = document.getElementById("stat-total");
 const statGamesEl        = document.getElementById("stat-games");
 const historyTitleEl     = document.getElementById("history-title");
 const historyListEl      = document.getElementById("history-list");
-const logoutBtn          = document.getElementById("logout-btn");
 
 // ---------- Game state ----------
 let snake       = [{x:2,y:2},{x:2,y:1},{x:2,y:0}];
@@ -537,13 +536,12 @@ function renderLeaderboard(rows) {
         `;
     }).join("");
 
-    // Leaderboard rows open the detail modal WITHOUT the logout button.
     leaderboardEl.querySelectorAll(".lb-row").forEach(row => {
         row.addEventListener("click", () => {
             const player = row.getAttribute("data-player");
             const meName = (session.name || session.email);
             const isSelf = player.toLowerCase() === meName.toLowerCase();
-            openPlayerModal(player, isSelf, /* showLogout */ false);
+            openPlayerModal(player, isSelf);
         });
     });
 }
@@ -736,12 +734,10 @@ document.querySelectorAll("[data-close-crisis]").forEach(el => {
 });
 
 /* ---------- Player detail modal ----------
-   Used for BOTH the logged-in user (clicking the nav chip) and any
-   other player (clicking a leaderboard row). `isSelf` controls
-   whether self-only bits are shown (email, signed-in time, "You"
-   badge). `showLogout` is separate because we only want the logout
-   button on the nav-chip flow, NOT on the leaderboard flow. */
-function openPlayerModal(playerName, isSelf, showLogout = false) {
+   Opened by clicking a leaderboard row. `isSelf` toggles the self-only
+   bits (email, signed-in time, "You" badge) for when the logged-in user
+   clicks their own row. The nav chip goes to profile.html, not here. */
+function openPlayerModal(playerName, isSelf) {
     // Header
     const initial = (playerName || "?")[0].toUpperCase();
     accountAvatarEl.textContent = initial;
@@ -751,7 +747,6 @@ function openPlayerModal(playerName, isSelf, showLogout = false) {
     accountEmailEl.hidden = !isSelf;
     accountSinceEl.hidden = !isSelf;
     youBadgeEl.hidden     = !isSelf;
-    logoutBtn.hidden      = !(isSelf && showLogout);
     if (isSelf) {
         accountEmailEl.textContent = session.email;
         accountSinceEl.textContent = "Signed in " + formatSince(session.loggedInAt);
@@ -838,28 +833,16 @@ document.querySelectorAll("[data-close-modal]").forEach(el => {
     el.addEventListener("click", closeAccountModal);
 });
 
-// Nav user chip → open modal for the logged-in user WITH logout button.
-renderUserChip(() => {
-    openPlayerModal(session.name || session.email, /* isSelf */ true, /* showLogout */ true);
-});
+// Nav user chip → link straight to the dedicated profile page.
+// (The in-page account modal is still used for leaderboard row clicks
+// on other players.)
+renderUserChip();
 
 /* ---------- Helpers ---------- */
 function escapeHtml(str) {
     return String(str).replace(/[&<>"']/g, c => ({
         "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
     }[c]));
-}
-
-function formatSince(iso) {
-    if (!iso) return "just now";
-    const diffMs = Date.now() - new Date(iso).getTime();
-    const mins = Math.floor(diffMs / 60000);
-    if (mins < 1) return "just now";
-    if (mins < 60) return mins + " min ago";
-    const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return hrs + " hr ago";
-    const days = Math.floor(hrs / 24);
-    return days + " day" + (days === 1 ? "" : "s") + " ago";
 }
 
 /* ---------- Initial load ---------- */
