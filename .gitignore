@@ -11,6 +11,8 @@ backend.log
 # Editor / IDE
 .vscode/
 .DS_Store
+.claude/
+SESSION_LOG.md
 
 # Node
 node_modules/
