@@ -1,5 +1,5 @@
 let weeklyQuota = 0;
-let weeklyPoints = 120; // temporary demo value
+let weeklyPoints = 10; // temporary demo value
 
 const dailyData = [
     { name: "Alice", followers: 59, points: 100, country: "London" },
