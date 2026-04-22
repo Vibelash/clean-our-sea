@@ -1,8 +1,10 @@
+/*
 package com.example.seasweepers.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+
 
 @Entity
 @Table(name = "reports")
@@ -105,3 +107,4 @@ public class Report {
         this.cleanedAt = cleanedAt;
     }
 }
+*/
