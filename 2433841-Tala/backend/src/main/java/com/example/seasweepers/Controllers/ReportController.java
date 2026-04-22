@@ -5,7 +5,7 @@ import com.example.seasweepers.Services.ReportService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+/*
 @RestController
 @RequestMapping("/reports")
 @CrossOrigin(origins = "*")
@@ -88,3 +88,4 @@ public class ReportController {
         }
     }
 }
+*/
