@@ -29,9 +29,15 @@ public class LeaderboardService {
             .toList();
 }
 
-    public List<User> getWeeklyLeaderboard() {
-        return userRepository.findAllByOrderByWeeklyPointsDesc();
+    public List<User> getWeeklyLeaderboard(String country) {
+    List<User> users = userRepository.findAllByOrderByWeeklyPointsDesc();
+    if (country == null || country.equalsIgnoreCase("all")) {
+        return users;
     }
+    return users.stream()
+            .filter(user -> user.getCountry() != null && user.getCountry().equalsIgnoreCase(country))
+            .toList();
+}
 
     public User getUser(Long userId) {
         return userRepository.findById(userId)
