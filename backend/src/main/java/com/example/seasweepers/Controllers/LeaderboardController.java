@@ -23,8 +23,8 @@ public List<User> getLeaderboard(@RequestParam(required = false) String country)
 }
 
     @GetMapping("/weekly")
-    public List<User> getWeeklyLeaderboard() {
-        return leaderboardService.getWeeklyLeaderboard();
+    public List<User> getWeeklyLeaderboard(@RequestParam(required = false) String country) {
+        return leaderboardService.getWeeklyLeaderboard(country);
     }
 
     @GetMapping("/{userId}/weekly-goal")
