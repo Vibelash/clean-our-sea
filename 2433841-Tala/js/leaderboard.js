@@ -178,9 +178,9 @@ document.getElementById('set-quota-btn').addEventListener('click', () => {
 
 function updateProgressBar() {
 
-    if (weeklyQuota === 0) return;
+    document.getElementById('weekly-points').textContent = weeklyPoints;
 
-    const percentage = Math.min((weeklyPoints / weeklyQuota) * 100, 100);
+    const percentage = weeklyQuota === 0 ? 0 : Math.min((weeklyPoints / weeklyQuota) * 100, 100);
 
     document.getElementById('progress-bar').style.width = percentage + "%";
 }
