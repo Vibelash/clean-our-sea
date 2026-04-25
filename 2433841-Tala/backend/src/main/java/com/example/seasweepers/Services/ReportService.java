@@ -54,7 +54,7 @@ public class ReportService {
         return reportRepository.findByStatusIgnoreCase(status);
     }
 
-  /*  @Transactional
+    @Transactional
     public Report confirmCleanup(Long reportId, Long userId) {
 
         Report report = reportRepository.findById(reportId)
@@ -79,9 +79,9 @@ public class ReportService {
         userRepository.save(cleaner);
 
         return reportRepository.save(report);
-    } */
+    } 
 
-   /* private int calculatePoints(int stage){
+    private int calculatePoints(int stage){
 
         switch(stage){
             case 1: return 10;
@@ -92,5 +92,5 @@ public class ReportService {
             default:
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid stage value");
         }
-    }*/
+    }
 }
