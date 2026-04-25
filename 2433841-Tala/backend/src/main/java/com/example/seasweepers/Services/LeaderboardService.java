@@ -17,21 +17,23 @@ public class LeaderboardService {
     }
 
    public List<User> getLeaderboard(String country) {
+    if (country == null || country.equalsIgnoreCase("all")) {
+        return userRepository.findAllByOrderByTotalScoreDesc();
+    }
+    return userRepository.findByCountryIgnoreCaseOrderByTotalScoreDesc(country);
+}
 
-    List<User> users = userRepository.findAllByOrderByTotalScoreDesc();
+   
 
+    public List<User> getWeeklyLeaderboard(String country) {
+    List<User> users = userRepository.findAllByOrderByWeeklyPointsDesc();
     if (country == null || country.equalsIgnoreCase("all")) {
         return users;
     }
-
     return users.stream()
-            .filter(user -> user.getCountry().equalsIgnoreCase(country))
+            .filter(user -> user.getCountry() != null && user.getCountry().equalsIgnoreCase(country))
             .toList();
 }
-
-    public List<User> getWeeklyLeaderboard() {
-        return userRepository.findAllByOrderByWeeklyPointsDesc();
-    }
 
     public User getUser(Long userId) {
         return userRepository.findById(userId)
@@ -47,3 +49,4 @@ public class LeaderboardService {
         return userRepository.save(user);
     }
 }
+
