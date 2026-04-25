@@ -7,7 +7,7 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findAllByOrderByTotalScoreDesc();
-
+    List<User> findByCountryIgnoreCaseOrderByTotalScoreDesc(String country);
     List<User> findAllByOrderByWeeklyPointsDesc();
 
 }
