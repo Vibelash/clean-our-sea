@@ -1,4 +1,4 @@
-/*
+
 package com.example.seasweepers.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -107,4 +107,4 @@ public class Report {
         this.cleanedAt = cleanedAt;
     }
 }
-*/
+
