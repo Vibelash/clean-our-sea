@@ -1,6 +1,6 @@
 let weeklyQuota = 0;
 let weeklyPoints = 0;
-let loggedInUserId = null;   // captured when the leaderboard loads, needed for PUT /weekly-goal
+let loggedInUserId = null;   // its captured when the leaderboard loads and its needed for PUT /weekly-goal
 
 // Simulated logged-in user
 const loggedInUser = "Tala";
@@ -16,7 +16,7 @@ async function loadLeaderboard() {
         let url = "";
 
         if (currentMode === "daily") {
-            url = `${BACKEND}/leaderboard/weekly`;
+             url = `${BACKEND}/leaderboard/weekly?country=${selectedCountry}`;
         } else {
             url = `${BACKEND}/leaderboard?country=${selectedCountry}`;
         }
@@ -57,13 +57,10 @@ function populateLeaderboard(data) {
 
     const selectedCountry = document.getElementById('country-filter').value;
 
-    // Filter by country if backend adds it later
-    const filteredData = selectedCountry === 'all'
-        ? data
-        : data.filter(user => user.country === selectedCountry);
+    
 
     // Sort by score
-    const sortedData = filteredData.sort((a, b) => b.totalScore - a.totalScore);
+    const sortedData = data.sort((a, b) => b.totalScore - a.totalScore);
 
     const topThree = sortedData.slice(0, 3);
     const restOfTheData = sortedData.slice(3);
@@ -198,12 +195,12 @@ document.getElementById('set-quota-btn').addEventListener('click', async () => {
         return;
     }
 
-    // Optimistic UI update so the bar moves immediately...
+    // Optimistic UI update so the bar moves immediately
     weeklyQuota = inputValue;
     document.getElementById('quota-value').textContent = weeklyQuota;
     updateProgressBar();
 
-    // ...then persist to the backend. The server's response is the source of truth.
+    
     try {
         const response = await fetch(`${BACKEND}/leaderboard/${loggedInUserId}/weekly-goal`, {
             method:  'PUT',
@@ -216,7 +213,7 @@ document.getElementById('set-quota-btn').addEventListener('click', async () => {
         }
 
         const data = await response.json();
-        // Reconcile in case the server clamped or adjusted the value
+        // Reconcile in case the server  adjusted the value
         weeklyQuota  = data.weeklyGoal;
         weeklyPoints = data.weeklyPoints;
         document.getElementById('quota-value').textContent  = weeklyQuota;
@@ -224,7 +221,7 @@ document.getElementById('set-quota-btn').addEventListener('click', async () => {
         updateProgressBar();
     } catch (err) {
         console.error("Failed to save weekly goal:", err);
-        alert("Could not save your goal — check the backend is running on localhost:8080.");
+        alert("Could not save your goal, check that  backend is running on localhost:8080.");
     }
 });
 
