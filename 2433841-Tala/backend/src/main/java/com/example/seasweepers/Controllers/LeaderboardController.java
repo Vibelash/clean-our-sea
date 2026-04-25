@@ -21,6 +21,7 @@ public class LeaderboardController {
 public List<User> getLeaderboard(@RequestParam(required = false) String country) {
     return leaderboardService.getLeaderboard(country);
 }
+    @GetMapping("/weekly")
  public List<User> getWeeklyLeaderboard(@RequestParam(required = false) String country) {
     return leaderboardService.getWeeklyLeaderboard(country);
      
