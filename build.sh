@@ -52,8 +52,9 @@ cp "$SRC/2433841-Tala/css/leaderboard.css"      "$DST/css/2433841/"
 cp "$SRC/2433841-Tala/css/leaderboard.css.min"  "$DST/css/2433841/"
 # Shared / top-level CSS (HTML references as css/*.css):
 cp "$SRC/2433841-Tala/css/style.css"            "$DST/css/"
-# Daniel's quizzes.html has inline styles so no quizzes.css to copy;
-# quiz-page.html links quiz-page.css at the root, same as the js files:
+# Daniel's quizzes.html links quizzstyle.css; quiz-page.html links quiz-page.css.
+# Both live at the root next to the HTML files:
+cp "$SRC/2335984-Daniel/frontend/quizzstyle.css" "$DST/"
 cp "$SRC/2335984-Daniel/frontend/quiz-page.css" "$DST/"
 cp "$SRC/shared/css/enhancements.css"           "$DST/css/"
 

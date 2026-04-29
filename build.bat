@@ -46,6 +46,7 @@ copy /Y "%ROOT%2419616-Tarun\css\communities.css.min" "%DST%\css\2419616\" >nul
 copy /Y "%ROOT%2433841-Tala\css\leaderboard.css"      "%DST%\css\2433841\" >nul
 copy /Y "%ROOT%2433841-Tala\css\leaderboard.css.min"  "%DST%\css\2433841\" >nul
 copy /Y "%ROOT%2433841-Tala\css\style.css"            "%DST%\css\"         >nul
+copy /Y "%ROOT%2335984-Daniel\frontend\quizzstyle.css" "%DST%\"           >nul
 copy /Y "%ROOT%2335984-Daniel\frontend\quiz-page.css" "%DST%\"            >nul
 copy /Y "%ROOT%shared\css\enhancements.css"           "%DST%\css\"         >nul
 
