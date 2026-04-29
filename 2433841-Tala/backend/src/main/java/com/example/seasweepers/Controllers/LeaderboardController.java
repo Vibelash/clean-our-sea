@@ -23,7 +23,7 @@ public List<User> getLeaderboard(@RequestParam(required = false) String country)
 }
     @GetMapping("/weekly")
  public List<User> getWeeklyLeaderboard(@RequestParam(required = false) String country) {
-    return leaderboardService.getWeeklyLeaderboard(country);
+    return leaderboardService.getWeeklyLeaderboard(country);}
      
    
 
