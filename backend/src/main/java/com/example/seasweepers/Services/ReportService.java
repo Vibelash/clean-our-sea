@@ -84,11 +84,11 @@ public class ReportService {
     private int calculatePoints(int stage){
 
         switch(stage){
-            case 1: return 100;
-            case 2: return 200;
-            case 3: return 300;
-            case 4: return 400;
-            case 5: return 500;
+            case 1: return 10;
+            case 2: return 20;
+            case 3: return 30;
+            case 4: return 40;
+            case 5: return 50;
             default:
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid stage value");
         }
