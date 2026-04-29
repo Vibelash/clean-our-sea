@@ -3,7 +3,7 @@
   // static frontend is served on :8000, so we can't use bare /api/ paths any
   // more — they'd hit the Python static server. Prefix every call with the
   // backend origin.
-  const BACKEND = "http://localhost:8080";
+  const BACKEND = "https://clean-our-sea-backend.onrender.com";
 
   // Communities page logic moved from inline script
   const sample = [

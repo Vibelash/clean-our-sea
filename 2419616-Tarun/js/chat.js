@@ -1,6 +1,6 @@
 (function(){
   // Combined backend origin — frontend is on :8000, API on :8080 in local dev.
-  const BACKEND = "http://localhost:8080";
+  const BACKEND = "https://clean-our-sea-backend.onrender.com";
 
   function qs(name){ return new URLSearchParams(location.search).get(name); }
   const id = Number(qs('id')) || null;

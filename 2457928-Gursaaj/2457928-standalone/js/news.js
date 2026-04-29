@@ -4,7 +4,7 @@
    news.html (full list + modal + filter chips).
    ============================================================ */
 
-const NEWS_BACKEND = "http://localhost:8080";
+const NEWS_BACKEND = "https://clean-our-sea-backend.onrender.com";
 const NEWS_ENDPOINT        = NEWS_BACKEND + "/news";
 const NEWS_PREVIEW_ENDPOINT = NEWS_BACKEND + "/news/preview";
 const IMPACT_ENDPOINT       = NEWS_BACKEND + "/scores/impact";

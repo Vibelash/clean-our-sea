@@ -6,7 +6,7 @@ const loggedInUser = "Tala";
 
 let currentMode = "daily";
 
-const BACKEND = "http://localhost:8080";
+const BACKEND = "https://clean-our-sea-backend.onrender.com";
 async function loadLeaderboard() {
     try {
         const selectedCountry = document.getElementById('country-filter').value;

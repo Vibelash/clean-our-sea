@@ -1,5 +1,5 @@
 // talks to Spring Boot on port 8080
-const API = 'http://localhost:8080';
+const API = 'https://clean-our-sea-backend.onrender.com';
 
 // hardcoded user id for now — replace this when login is added
 const USER_ID = 1;
@@ -69,7 +69,7 @@ async function loadQuizzes()
         document.getElementById('quiz-grid').innerHTML = `
             <div style="grid-column:1/-1;text-align:center;padding:40px;color:#9aa4b2;">
                 ⚠️ Could not connect to backend.
-                Make sure Spring Boot is running on <strong>http://localhost:8080</strong>.
+                Make sure Spring Boot is running on <strong>https://clean-our-sea-backend.onrender.com</strong>.
             </div>`;
     }
 }

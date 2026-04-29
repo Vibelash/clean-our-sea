@@ -7,7 +7,7 @@ const loggedInUser = "Tala";
 
 let currentMode = "yearly"; // default
 
-const BACKEND = "http://localhost:8080";
+const BACKEND = "https://clean-our-sea-backend.onrender.com";
 
 async function loadLeaderboard() {
     try {

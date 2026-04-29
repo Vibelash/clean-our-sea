@@ -6,7 +6,7 @@
 
 // Local combined backend. Deployed version used Render; in clean-our-sea-local
 // the news + scores endpoints are served by Spring Boot on :8080.
-const NEWS_BACKEND = "http://localhost:8080";
+const NEWS_BACKEND = "https://clean-our-sea-backend.onrender.com";
 const NEWS_ENDPOINT        = NEWS_BACKEND + "/news";
 const NEWS_PREVIEW_ENDPOINT = NEWS_BACKEND + "/news/preview";
 const IMPACT_ENDPOINT       = NEWS_BACKEND + "/scores/impact";

@@ -10,7 +10,7 @@ if (!session) {
     throw new Error("Not authenticated");
 }
 
-const BACKEND_BASE = "http://localhost:8080";
+const BACKEND_BASE = "https://clean-our-sea-backend.onrender.com";
 
 const playerName = session.name || session.email;
 const initial = (playerName || "?")[0].toUpperCase();

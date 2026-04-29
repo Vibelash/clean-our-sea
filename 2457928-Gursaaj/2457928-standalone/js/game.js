@@ -19,7 +19,7 @@ if (!session) {
 }
 
 // ---------- Config ----------
-const BACKEND_BASE   = "http://localhost:8080";
+const BACKEND_BASE   = "https://clean-our-sea-backend.onrender.com";
 const GRID_SIZE      = 6;
 const BASE_TICK_MS   = 220;  // normal game speed
 const POINTS_PER_HIT = 10;   // every piece of trash is worth this much

@@ -1,4 +1,4 @@
-const API    = 'http://localhost:8080';
+const API    = 'https://clean-our-sea-backend.onrender.com';
 const params = new URLSearchParams(window.location.search);
 const QUIZ_ID = params.get('id');
 const TITLE   = decodeURIComponent(params.get('title') || 'Quiz');
