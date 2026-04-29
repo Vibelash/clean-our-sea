@@ -25,7 +25,7 @@ public class LeaderboardService {
     }
 
     return users.stream()
-            .filter(user -> user.getCountry().equalsIgnoreCase(country))
+            .filter(user -> user.getCountry() != null && user.getCountry().equalsIgnoreCase(country))
             .toList();
 }
 
