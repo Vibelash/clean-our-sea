@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "irl-status-window"
+  },
+  "targets": {
+    "irl-status-window": {
+      "hosting": {
+        "clean-our-sea": [
+          "clean-our-sea"
+        ]
+      }
+    }
+  }
+}

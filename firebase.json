@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "target": "clean-our-sea",
+    "public": "deploy/public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

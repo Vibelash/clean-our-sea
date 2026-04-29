@@ -1,6 +1,9 @@
 # Build output — regenerate with build.sh
 /deploy/
 
+# Firebase Hosting cache — regenerated on each deploy
+.firebase/
+
 # Maven build artifacts
 **/target/
 
