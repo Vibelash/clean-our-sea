@@ -3,6 +3,7 @@ package com.q.quizzes.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.q.quizzes.dto.UserStatsDTO;
 import com.q.quizzes.exception.ResourceNotFoundException;
 import com.q.quizzes.model.UserQuiz;
 import com.q.quizzes.repository.UserQuizRepository;
@@ -45,11 +46,35 @@ public class UserQuizService
         return userQuizRepository.save(attempt);
     }
 
-    public void deleteAttempt(Long id) 
+    public void deleteAttempt(Long id)
     {
         //checks if exists
         UserQuiz attempt = userQuizRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("UserQuiz", "id", id));
         userQuizRepository.delete(attempt);
+    }
+
+    // calculates live stats for a specific user from their attempt history
+    public UserStatsDTO getStatsForUser(Long userId)
+    {
+        List<UserQuiz> attempts = userQuizRepository.findByUserId(userId);
+
+        int quizzesCompleted = attempts.size();
+
+        // return zeros if the user has not attempted anything yet
+        if (quizzesCompleted == 0)
+        {
+            return new UserStatsDTO(0, 0, 0);
+        }
+
+        int totalPoints = 0;
+        for (UserQuiz a : attempts)
+        {
+            totalPoints += a.getScore();
+        }
+
+        int averageScore = totalPoints / quizzesCompleted;
+
+        return new UserStatsDTO(quizzesCompleted, averageScore, totalPoints);
     }
 }

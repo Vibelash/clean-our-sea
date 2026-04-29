@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.seasweepers.Models.User;
+import com.example.seasweepers.Repos.UserRepository;
 import com.example.snakebackend.dto.ImpactDTO;
 import com.example.snakebackend.dto.PlayerStatsDTO;
 import com.example.snakebackend.models.Score;
@@ -31,9 +33,11 @@ public class ScoreService {
     private static final int LEADERBOARD_SIZE = 10;
 
     private final ScoreRepo repo;
+    private final UserRepository userRepository;
 
-    public ScoreService(ScoreRepo repo) {
+    public ScoreService(ScoreRepo repo, UserRepository userRepository) {
         this.repo = repo;
+        this.userRepository = userRepository;
     }
 
     // ---------- Read ----------
@@ -68,7 +72,20 @@ public class ScoreService {
         }
         // Trim whitespace so "Alice " and "Alice" are treated as the same player.
         score.setPlayer(score.getPlayer().trim());
-        return repo.save(score);
+        Score saved = repo.save(score);
+
+        // Cross-module link: bump the matching User's totalScore + weeklyPoints
+        // so Tala's /leaderboard reflects this game. Silently no-ops if the
+        // game was anonymous (no userId) or the user no longer exists.
+        Long uid = saved.getUserId();
+        if (uid != null) {
+            userRepository.findById(uid).ifPresent(u -> {
+                u.setTotalScore(u.getTotalScore() + saved.getScore());
+                u.setWeeklyPoints(u.getWeeklyPoints() + saved.getScore());
+                userRepository.save(u);
+            });
+        }
+        return saved;
     }
 
     // ---------- Update ----------
@@ -82,6 +99,15 @@ public class ScoreService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Score cannot be negative");
         }
         existing.setScore(updated.getScore());
+        return repo.save(existing);
+    }
+
+    public Score renamePlayer(Long id, String newPlayer) {
+        if (newPlayer == null || newPlayer.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Player name is required");
+        }
+        Score existing = getScoreById(id);
+        existing.setPlayer(newPlayer.trim());
         return repo.save(existing);
     }
 

@@ -1,4 +1,4 @@
-/* register.js — wires the register form to auth.js */
+/* register.js — wires the register form to the backend via auth.js */
 
 const regForm    = document.getElementById("register-form");
 const msg        = document.getElementById("message");
@@ -17,14 +17,14 @@ function clearMessage() {
     msg.textContent = "";
 }
 
-regForm.addEventListener("submit", (e) => {
+regForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     clearMessage();
 
     const name     = nameInput.value.trim();
     const email    = emailInput.value.trim();
-    const password = pwInput.value.trim();
-    const repPw    = repPwInput.value.trim();
+    const password = pwInput.value;
+    const repPw    = repPwInput.value;
     const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/;
 
     if (!name || !email || !password || !repPw) {
@@ -48,16 +48,15 @@ regForm.addEventListener("submit", (e) => {
         return;
     }
 
-    const result = registerUser({ name, email, password });
-    if (!result.ok) {
-        showMessage(result.error, "error");
-        return;
-    }
+    showMessage("Creating your account…", "info");
 
-    // Auto-login on successful registration.
-    loginUser({ email, password });
-    showMessage("Account created! Taking you to the game…", "success");
-    setTimeout(() => {
-        window.location.href = "game.html";
-    }, 700);
+    try {
+        // The backend uses `username` as the unique handle; we send the
+        // user's chosen display name into that field.
+        await window.auth.registerUser({ username: name, email, password });
+        showMessage("Account created! Taking you to your profile…", "success");
+        setTimeout(() => { window.location.href = "profile.html"; }, 600);
+    } catch (err) {
+        showMessage(err && err.message ? err.message : "Registration failed.", "error");
+    }
 });

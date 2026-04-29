@@ -72,8 +72,9 @@
     const modal = document.getElementById('modal');
     const createForm = document.getElementById('createForm');
 
-    // ensure modal hidden
-    if(modal){ modal.hidden = true; modal.setAttribute('aria-hidden','true'); }
+    // ensure modal hidden — CSS uses both the `hidden` attribute and the
+    // `.active` class to drive visibility, so toggle them together.
+    if(modal){ modal.hidden = true; modal.classList.remove('active'); modal.setAttribute('aria-hidden','true'); }
 
     function render(items){
       const deleted = getDeletedIds();
@@ -130,12 +131,12 @@
     // create modal handlers
     if(createBtn){
       createBtn.addEventListener('click', ()=>{
-        if(modal){ modal.hidden = false; modal.setAttribute('aria-hidden','false'); const nameInput = modal.querySelector('input[name="name"]'); if(nameInput) nameInput.focus(); }
+        if(modal){ modal.hidden = false; modal.classList.add('active'); modal.setAttribute('aria-hidden','false'); const nameInput = modal.querySelector('input[name="name"]'); if(nameInput) nameInput.focus(); }
       });
     }
     const cancelBtn = document.getElementById('cancel');
     const modalCloseBtn = document.getElementById('modalClose');
-    function closeModal(){ if(modal){ modal.hidden = true; modal.setAttribute('aria-hidden','true'); } if(createForm) createForm.reset(); if(createBtn) createBtn.focus(); }
+    function closeModal(){ if(modal){ modal.hidden = true; modal.classList.remove('active'); modal.setAttribute('aria-hidden','true'); } if(createForm) createForm.reset(); if(createBtn) createBtn.focus(); }
     if(cancelBtn) cancelBtn.addEventListener('click', closeModal);
     if(modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
     if(modal) modal.addEventListener('click', (e)=>{ if(e.target === modal){ closeModal(); } });

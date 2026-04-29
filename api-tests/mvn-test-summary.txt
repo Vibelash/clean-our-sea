@@ -1,0 +1,5 @@
+[INFO]  T E S T S
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.15 s -- in com.example.snakebackend.services.NewsServiceTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.341 s -- in com.example.snakebackend.services.ScoreServiceTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.337 s -- in com.example.snakebackend.services.UnifiedLeaderboardServiceTest
+[INFO] Tests run: 21, Failures: 0, Errors: 0, Skipped: 0

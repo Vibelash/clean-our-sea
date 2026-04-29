@@ -6,6 +6,66 @@
     <title>News & Facts — Clean Our Sea</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/enhancements.css">
+    <style>
+        /* v5 additions: search box + like button. Scoped to news.html so
+           teammates' shared CSS files don't need editing. */
+        .news-search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            max-width: 480px;
+            margin: 14px 0 18px;
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 999px;
+        }
+        .news-search input {
+            flex: 1;
+            background: transparent;
+            border: 0;
+            outline: 0;
+            color: inherit;
+            font: inherit;
+            padding: 6px 4px;
+        }
+        .news-search input::placeholder { color: rgba(255, 255, 255, 0.5); }
+        #news-search-clear {
+            background: transparent;
+            border: 0;
+            color: inherit;
+            font-size: 18px;
+            line-height: 1;
+            padding: 4px 8px;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+        #news-search-clear:hover { opacity: 1; }
+
+        .news-item-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .like-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: inherit;
+            font: inherit;
+            border-radius: 999px;
+            padding: 4px 12px;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .like-btn:hover { background: rgba(255, 80, 120, 0.15); border-color: rgba(255, 80, 120, 0.4); }
+        .like-btn:disabled { opacity: 0.6; cursor: progress; }
+        .like-btn.liked { background: rgba(255, 60, 100, 0.25); border-color: rgba(255, 60, 100, 0.6); color: #ff6e8a; }
+    </style>
 </head>
 <body>
 
@@ -34,6 +94,16 @@
                 Curated short-form updates on ocean plastic, marine species,
                 climate progress, and what you can do about it.
             </p>
+
+            <!-- Search bar (hits GET /news/search?q=…) -->
+            <div class="news-search">
+                <input id="news-search-input"
+                       type="search"
+                       placeholder="Search articles…"
+                       aria-label="Search news articles"
+                       autocomplete="off">
+                <button id="news-search-clear" type="button" hidden aria-label="Clear search">×</button>
+            </div>
 
             <!-- Category filter chips -->
             <div class="news-filter" id="news-filter" role="tablist">

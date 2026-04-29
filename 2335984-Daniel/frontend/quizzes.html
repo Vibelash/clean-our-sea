@@ -4,84 +4,280 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ocean Quizzes - Clean Our Sea</title>
-    <link rel="stylesheet" href="quizzstyle.css" />
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/enhancements.css">
     <style>
-      :root {
-        --white: #ffffff;
-        --muted-light: #ccf1fe;
-        --accent-light: #59a0e7;
-        --bg-dark: #0f1724;
-        --muted-dark: #9aa4b2;
-        --accent: #3b82f6;
+      :root
+      {
+        --q-bg-dark: #0f1724;
+        --q-card-muted: #9aa4b2;
+        --q-accent: #3b82f6;
+        --q-accent-light: #59a0e7;
       }
-      body {
-        margin: 0; padding: 0; width: 100%; min-height: 100vh;
-        font-family: Arial, Helvetica, sans-serif;
-        background-color: var(--muted-light); overflow-x: hidden;
+
+      .quiz-container
+      {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
       }
-      nav {
-        background: white; padding: 15px 30px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        position: sticky; top: 0; z-index: 100;
-        display: flex; justify-content: center; align-items: center; gap: 40px;
+
+      .page-title
+      {
+        text-align: center;
+        font-size: 2.5rem;
+        color: #ffffff;
+        margin-bottom: 10px;
       }
-      nav a {
-        display: inline-block; padding: 10px 16px; border-radius: 8px;
-        background: transparent; color: #4a4a4d; font-weight: 500;
-        text-decoration: none; transition: 0.3s ease; position: relative;
+
+      .page-subtitle
+      {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.75);
+        margin-bottom: 40px;
       }
-      nav a:hover { background: rgba(0,0,0,0.08); }
-      nav a::after {
-        content: ""; display: block; height: 3px; width: 0%;
-        background: #070f2c; transition: 0.3s ease; margin: 0 auto; border-radius: 10px;
+
+      .filter-row
+      {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 20px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
       }
-      nav a:hover::after, nav a.active::after { width: 80%; }
-      nav a.logo img { height: 30px; width: auto; display: block; }
-      .map { border: 2px solid #070f2c; border-radius: 4px; padding: 2px 2rem; color: #070f2c; }
+      .filter-left, .filter-right
+      {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .filter-left label
+      {
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 14px;
+      }
+      .filter-left select,
+      .filter-right input
+      {
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        font-size: 14px;
+      }
+      .filter-right input::placeholder
+      {
+        color: rgba(255, 255, 255, 0.6);
+      }
+      .quiz-counter-wrap
+      {
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 13px;
+      }
+      /*quiz cards */
+      .quiz-grid 
+      {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
+      }
+
+      .quiz-card 
+      {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+      }
+      /*hover effect*/
+      .quiz-card:hover 
+      {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      }
+
+      .quiz-icon 
+      {
+        font-size: 3rem;
+        margin-bottom: 15px;
+      }
+
+      .quiz-title 
+      {
+        font-size: 1.5rem;
+        color: var(--q-bg-dark);
+        margin-bottom: 10px;
+      }
+
+      .quiz-description 
+      {
+        color: var(--q-card-muted);
+        margin-bottom: 15px;
+        line-height: 1.6;
+      }
+
+      .quiz-meta 
+      { 
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px solid #e5e7eb;
+      }
+
+      .quiz-difficulty 
+      {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+
+      .difficulty-easy 
+      {
+        background: #d1fae5;
+        color: #065f2a;
+      }
+
+      .difficulty-medium 
+      {
+        background: #fef3c7;
+        color: #924819;
+      }
+
+      .difficulty-hard 
+      {
+        background: #fee2e2;
+        color: #ab1010;
+      }
+
+      .quiz-questions 
+      {
+        color: var(--q-card-muted);
+        font-size: 0.9rem;
+      }
+
+      .start-btn
+      {
+        background: var(--q-accent);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        margin-top: 15px;
+        width: 100%;
+      }
+
+      .start-btn:hover
+      {
+        background: var(--q-accent-light);
+      }
+
+      .stats-section
+      {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      }
+
+      .stats-title 
+      {
+        font-size: 1.5rem;
+        color: var(--q-bg-dark);
+        margin-bottom: 20px;
+      }
+
+      .stats-grid 
+      {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+      }
+
+      .stat-card
+      {
+        text-align: center;
+        padding: 20px;
+        background: #ccf1fe;
+        border-radius: 8px;
+      }
+
+      .stat-number
+      {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--q-accent);
+        margin-bottom: 5px;
+      }
+
+      .stat-label 
+      {
+        color: var(--q-card-muted);
+        font-size: 0.9rem;
+      }
+
     </style>
   </head>
   <body>
     <nav>
-      <a href="#" class="logo"><img src="logo.png" alt="Clean Our Sea Logo"></a>
-      <a href="communities.html">Community</a>
+      <a class="brand" href="index.html">
+        <span class="dot"></span>
+        Clean Our Sea
+      </a>
       <a href="index.html">Home</a>
+      <a href="news.html">News</a>
+      <a href="game.html">Play</a>
       <a href="quizzes.html" class="active">Quizzes</a>
-      <a href="#">Games</a>
-      <a href="#">Leaderboards</a>
-      <a href="#" class="map">Log in</a>
+      <a href="communities.html">Communities</a>
+      <a href="may/map.html">Map</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <div class="spacer"></div>
+      <div id="user-chip-slot"></div>
     </nav>
 
     <div class="quiz-container">
       <h1 class="page-title">Ocean World Quizzes</h1>
       <p class="page-subtitle">Take a quiz to test your knowledge and learn about the marine world and conservation efforts</p>
 
-      <!-- stats are filled in by quizzes.js after it calls GET /user-quiz/stats/1 -->
+      <!-- stats are filled by quizzes.js after calling GET /user-quiz/stats/{userId} -->
       <div class="stats-section">
         <h2 class="stats-title">Your Progress</h2>
         <div class="stats-grid">
           <div class="stat-card">
-            <!-- updated by JS with the number of quiz attempts from the database -->
+            <!-- updated by JS with quizzesCompleted from the backend -->
             <div class="stat-number" id="stat-completed">—</div>
             <div class="stat-label">Quizzes Completed</div>
           </div>
           <div class="stat-card">
-            <!-- updated by JS with average score from the database -->
+            <!-- updated by JS with averageScore from the backend -->
             <div class="stat-number" id="stat-avg">—</div>
-            <div class="stat-label">Average Score</div>
+            <div class="stat-label">Average Score Per Quiz</div>
           </div>
           <div class="stat-card">
-            <!-- static for now until achievements table is connected -->
+            <!-- static until achievements are connected -->
             <div class="stat-number">4</div>
             <div class="stat-label">Badges Earned</div>
           </div>
           <div class="stat-card">
-            <!-- updated by JS with total points from the database -->
+            <!-- updated by JS with totalPoints from the backend -->
             <div class="stat-number" id="stat-points">—</div>
             <div class="stat-label">Total Points</div>
           </div>
         </div>
       </div>
-
       <div class="filter-row">
         <div class="filter-left">
           <label for="difficulty-filter">Filter by difficulty</label>
@@ -92,15 +288,23 @@
             <option value="hard">Hard</option>
           </select>
         </div>
+
         <div class="filter-right">
           <input type="text" id="quiz-search" placeholder="Search Quizzes...">
+          <span class="quiz-counter-wrap">
+            Showing <span id="quiz-counter">0</span> quizzes
+          </span>
         </div>
       </div>
 
-      <!-- cards are built dynamically by quizzes.js using data from the API -->
+      <!-- quiz cards are built by quizzes.js using data from GET /quiz -->
       <div class="quiz-grid" id="quiz-grid"></div>
     </div>
 
+    <script src="js/auth.js"></script>
     <script src="quizzes.js"></script>
+    <script>
+      if (typeof renderUserChip === "function") renderUserChip();
+    </script>
   </body>
 </html>

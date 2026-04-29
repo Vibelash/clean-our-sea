@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.q.quizzes.dto.UserQuizPostDTO;
+import com.q.quizzes.dto.UserStatsDTO;
 import com.q.quizzes.model.UserQuiz;
 import com.q.quizzes.service.UserQuizService;
 
@@ -45,9 +46,18 @@ public class UserQuizController
 
     // GET /user-quiz/quiz/[quizid]
     @GetMapping("/quiz/{quizId}")
-    public List<UserQuiz> getByQuiz(@PathVariable Long quizId) 
+    public List<UserQuiz> getByQuiz(@PathVariable Long quizId)
     {
         return userQuizService.getAttemptsByQuiz(quizId);
+    }
+
+    // GET /user-quiz/stats/{userId}, returns live stats for the progress section
+    // called by quizzes.html on load to fill in completed, average score and total points
+    @GetMapping("/stats/{userId}")
+    public ResponseEntity<UserStatsDTO> getStats(@PathVariable Long userId)
+    {
+        UserStatsDTO stats = userQuizService.getStatsForUser(userId);
+        return ResponseEntity.ok(stats);
     }
 
     // POST /user-quiz

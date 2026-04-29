@@ -2,7 +2,16 @@ const API    = 'https://clean-our-sea-backend.onrender.com';
 const params = new URLSearchParams(window.location.search);
 const QUIZ_ID = params.get('id');
 const TITLE   = decodeURIComponent(params.get('title') || 'Quiz');
-const USER_ID = 1; // placeholder until registration is implemented
+// Use the logged-in user's id when available; falls back to 1 for guests
+// so the demo quiz still runs without a session.
+function currentUserId() {
+  if (typeof getUserId === 'function')        return getUserId();
+  if (window.auth && window.auth.getCurrentUserId) {
+    const id = window.auth.getCurrentUserId();
+    if (id != null) return id;
+  }
+  return 1;
+}
 
 let questions   = [];
 let current     = 0;
@@ -171,7 +180,7 @@ async function showResults() {
     await fetch(`${API}/user-quiz`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: USER_ID, quizId: parseInt(QUIZ_ID), score }),
+      body: JSON.stringify({ userId: currentUserId(), quizId: parseInt(QUIZ_ID), score }),
     });
     console.log(`Score saved: ${score}/${total}`);
   } catch (err) {

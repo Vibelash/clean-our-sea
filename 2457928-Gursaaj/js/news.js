@@ -1,19 +1,24 @@
 /* ============================================================
    Snake Infinity — News & Facts feed
    Shared between index.html (preview strip + hero stats) and
-   news.html (full list + modal + filter chips).
+   news.html (full list + modal + filter chips + search + likes).
    ============================================================ */
 
-// Local combined backend. Deployed version used Render; in clean-our-sea-local
-// the news + scores endpoints are served by Spring Boot on :8080.
+// Local combined backend. The deployed version used Render; in
+// clean-our-sea-local everything is served by Spring Boot on :8080.
 const NEWS_BACKEND = "https://clean-our-sea-backend.onrender.com";
-const NEWS_ENDPOINT        = NEWS_BACKEND + "/news";
-const NEWS_PREVIEW_ENDPOINT = NEWS_BACKEND + "/news/preview";
-const IMPACT_ENDPOINT       = NEWS_BACKEND + "/scores/impact";
-const SCORES_ENDPOINT       = NEWS_BACKEND + "/scores";
+const NEWS_ENDPOINT          = NEWS_BACKEND + "/news";
+const NEWS_PREVIEW_ENDPOINT  = NEWS_BACKEND + "/news/preview";
+const NEWS_SEARCH_ENDPOINT   = NEWS_BACKEND + "/news/search";
+const NEWS_TRENDING_ENDPOINT = NEWS_BACKEND + "/news/trending";
+const IMPACT_ENDPOINT        = NEWS_BACKEND + "/scores/impact";
+const SCORES_ENDPOINT        = NEWS_BACKEND + "/scores";
 
 /* Which category chip is active on news.html. "all" = no filter. */
 let activeCategory = "all";
+
+/* Current search query (empty = no search). */
+let searchQuery = "";
 
 /* Cache of the full (unfiltered) feed so category switching is instant. */
 let newsCache = null;
@@ -50,17 +55,25 @@ function bodyToHtml(body) {
         .join("");
 }
 
+/* Debounce: only call `fn` after `wait` ms of quiet. Used by search. */
+function debounce(fn, wait) {
+    let t = null;
+    return (...args) => {
+        if (t) clearTimeout(t);
+        t = setTimeout(() => fn(...args), wait);
+    };
+}
+
 /* --------- Home-page hero stats (index.html) --------- */
 
 function loadHomeHeroStats() {
-    // Pieces cleaned + games played come from the existing /scores/impact
     fetch(IMPACT_ENDPOINT)
         .then(r => r.ok ? r.json() : null)
         .then(data => {
             if (!data) return;
             const piecesEl = document.getElementById("home-stat-pieces");
-            if (piecesEl && typeof data.piecesOfPlastic === "number") {
-                piecesEl.textContent = data.piecesOfPlastic.toLocaleString();
+            if (piecesEl && typeof data.piecesOfPlasticCleaned === "number") {
+                piecesEl.textContent = data.piecesOfPlasticCleaned.toLocaleString();
             }
         })
         .catch(() => { /* offline: keep dash */ });
@@ -86,7 +99,7 @@ function loadHomeHeroStats() {
 
 function loadHomePreview() {
     const grid = document.getElementById("home-news-grid");
-    if (!grid) return;  // not on index.html
+    if (!grid) return;
 
     fetch(NEWS_PREVIEW_ENDPOINT)
         .then(r => {
@@ -150,7 +163,7 @@ function homeCardHtml(p) {
 
 function loadNewsPage() {
     const list = document.getElementById("news-list");
-    if (!list) return;  // not on news.html
+    if (!list) return;
 
     fetch(NEWS_ENDPOINT)
         .then(r => {
@@ -160,7 +173,6 @@ function loadNewsPage() {
         .then(posts => {
             newsCache = posts;
             renderNewsList(posts);
-            // If there's a #post-123 anchor, scroll to + open it.
             maybeOpenFromHash();
         })
         .catch(err => {
@@ -174,41 +186,102 @@ function loadNewsPage() {
         });
 }
 
+/* Hits GET /news/search?q=… and replaces the list with the result. */
+function runSearch(query) {
+    const list = document.getElementById("news-list");
+    if (!list) return;
+    if (!query || !query.trim()) {
+        // empty search → fall back to the cached full feed
+        renderNewsList(newsCache || []);
+        return;
+    }
+    const url = NEWS_SEARCH_ENDPOINT + "?q=" + encodeURIComponent(query.trim());
+    fetch(url)
+        .then(r => {
+            if (r.status === 400) return [];
+            if (!r.ok) throw new Error("Backend returned " + r.status);
+            return r.json();
+        })
+        .then(posts => renderNewsList(posts))
+        .catch(err => {
+            console.warn("[news] search failed:", err);
+        });
+}
+
 function renderNewsList(posts) {
     const list = document.getElementById("news-list");
     if (!list) return;
 
-    const filtered = activeCategory === "all"
+    // When a search is active the backend already filtered; otherwise
+    // we apply the category filter client-side from the cached feed.
+    const filtered = searchQuery
         ? posts
-        : posts.filter(p => (p.category || "").toLowerCase() === activeCategory);
+        : (activeCategory === "all"
+            ? posts
+            : posts.filter(p => (p.category || "").toLowerCase() === activeCategory));
 
     if (!filtered.length) {
-        list.innerHTML = `
-            <div class="news-empty">
-                <h3>No articles in this category yet.</h3>
-                <p>Try a different filter.</p>
-            </div>
-        `;
+        list.innerHTML = searchQuery
+            ? `<div class="news-empty"><h3>No articles match “${escapeHtml(searchQuery)}”.</h3><p>Try a different keyword or clear the search.</p></div>`
+            : `<div class="news-empty"><h3>No articles in this category yet.</h3><p>Try a different filter.</p></div>`;
         return;
     }
 
     list.innerHTML = filtered.map(p => newsItemHtml(p)).join("");
 
-    // wire up the card click → modal
+    // Card click → modal
     list.querySelectorAll("[data-article-id]").forEach(el => {
         el.addEventListener("click", (ev) => {
+            // Don't open the modal when the like button was clicked.
+            if (ev.target.closest("[data-like-id]")) return;
             ev.preventDefault();
             const id = Number(el.getAttribute("data-article-id"));
-            const found = (newsCache || []).find(p => p.id === id);
+            const found = (newsCache || []).find(p => p.id === id) || filtered.find(p => p.id === id);
             if (found) openArticleModal(found);
         });
     });
+
+    // Like button → PATCH /news/{id}/like
+    list.querySelectorAll("[data-like-id]").forEach(btn => {
+        btn.addEventListener("click", (ev) => {
+            ev.stopPropagation();
+            ev.preventDefault();
+            const id = Number(btn.getAttribute("data-like-id"));
+            likeArticle(id, btn);
+        });
+    });
+}
+
+function likeArticle(id, btn) {
+    btn.disabled = true;
+    fetch(NEWS_BACKEND + "/news/" + id + "/like", { method: "PATCH" })
+        .then(r => {
+            if (!r.ok) throw new Error("Backend returned " + r.status);
+            return r.json();
+        })
+        .then(updated => {
+            const countEl = btn.querySelector(".like-count");
+            if (countEl) countEl.textContent = updated.likes;
+            // Update the cached copy so refilter doesn't lose the new count.
+            if (newsCache) {
+                const cached = newsCache.find(p => p.id === id);
+                if (cached) cached.likes = updated.likes;
+            }
+            btn.classList.add("liked");
+        })
+        .catch(err => {
+            console.warn("[news] like failed:", err);
+        })
+        .finally(() => {
+            btn.disabled = false;
+        });
 }
 
 function newsItemHtml(p) {
     const date = formatDate(p.postedAt);
     const icon = p.icon || "📰";
     const cat = escapeHtml(p.category || "news");
+    const likes = (p.likes || 0).toLocaleString();
     return `
         <article class="news-item" id="post-${p.id}" data-article-id="${p.id}">
             <div class="news-item-icon" aria-hidden="true">${icon}</div>
@@ -219,7 +292,13 @@ function newsItemHtml(p) {
                 </div>
                 <h2 class="news-item-title">${escapeHtml(p.title)}</h2>
                 <p class="news-item-summary">${escapeHtml(p.summary)}</p>
-                <span class="news-item-more">Read full article →</span>
+                <div class="news-item-actions">
+                    <button class="like-btn" data-like-id="${p.id}" aria-label="Like this article">
+                        <span aria-hidden="true">♥</span>
+                        <span class="like-count">${likes}</span>
+                    </button>
+                    <span class="news-item-more">Read full article →</span>
+                </div>
             </div>
         </article>
     `;
@@ -272,7 +351,6 @@ function maybeOpenFromHash() {
     const id = Number(location.hash.replace("#post-", ""));
     const found = (newsCache || []).find(p => p.id === id);
     if (found) {
-        // smooth scroll to the card, then open it
         const el = document.getElementById("post-" + id);
         if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
         openArticleModal(found);
@@ -287,6 +365,15 @@ function wireCategoryChips() {
     filter.addEventListener("click", (ev) => {
         const btn = ev.target.closest(".chip");
         if (!btn) return;
+        // Switching category clears any active search to keep the UI predictable.
+        const input = document.getElementById("news-search-input");
+        if (input && input.value) {
+            input.value = "";
+            searchQuery = "";
+            const clearBtn = document.getElementById("news-search-clear");
+            if (clearBtn) clearBtn.hidden = true;
+        }
+
         filter.querySelectorAll(".chip").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         activeCategory = btn.getAttribute("data-cat") || "all";
@@ -294,22 +381,45 @@ function wireCategoryChips() {
     });
 }
 
+/* --------- Search box (news.html) --------- */
+
+function wireSearchBox() {
+    const input = document.getElementById("news-search-input");
+    const clearBtn = document.getElementById("news-search-clear");
+    if (!input) return;
+
+    const fire = debounce(() => {
+        searchQuery = input.value.trim();
+        if (clearBtn) clearBtn.hidden = !searchQuery;
+        runSearch(searchQuery);
+    }, 250);
+
+    input.addEventListener("input", fire);
+    if (clearBtn) {
+        clearBtn.addEventListener("click", () => {
+            input.value = "";
+            searchQuery = "";
+            clearBtn.hidden = true;
+            renderNewsList(newsCache || []);
+            input.focus();
+        });
+    }
+}
+
 /* --------- Boot --------- */
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Draw user chip if present + session exists
     if (typeof renderUserChip === "function") renderUserChip();
 
-    // Home page wiring
     if (document.getElementById("home-news-grid")) {
         loadHomePreview();
         loadHomeHeroStats();
     }
 
-    // News page wiring
     if (document.getElementById("news-list")) {
         wireArticleModal();
         wireCategoryChips();
+        wireSearchBox();
         loadNewsPage();
     }
 });

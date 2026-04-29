@@ -23,6 +23,7 @@
         <a href="may/map.html">Map</a>
         <a href="leaderboard.html">Leaderboard</a>
         <div class="spacer"></div>
+        <div id="user-chip-slot"></div>
     </nav>
 
     <div class="auth-shell">
@@ -64,5 +65,8 @@
 
     <script src="js/auth.js"></script>
     <script src="js/login.js"></script>
+    <script>
+        if (typeof renderUserChip === "function") renderUserChip();
+    </script>
 </body>
 </html>

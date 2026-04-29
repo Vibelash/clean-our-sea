@@ -1,0 +1,73 @@
+[33m>>[0m checking backend at http://localhost:8080
+[2m   purged 3 leftover test rows from a previous run[0m
+[33m>>[0m GET /news (full feed, newest first)
+[2m   feed size: 15[0m
+[33m>>[0m GET /news/preview (top 6)
+[33m>>[0m GET /news/trending (top 10 by likes)
+[33m>>[0m GET /news/categories (counts per category)
+[33m>>[0m GET /news?category=plastic (filtered)
+[33m>>[0m GET /news/search?q=ocean (keyword search)
+[33m>>[0m GET /news/search?q=a (too-short query → 400)
+[33m>>[0m POST /news (create a temp article for the rest of the suite)
+[2m   created id=66 category=action[0m
+[33m>>[0m GET /news/{id} (fetch the new article)
+[33m>>[0m PUT /news/{id} (replace mutable fields)
+[33m>>[0m PATCH /news/{id}/like (atomic +1)
+[33m>>[0m PATCH /news/99999/like (404 on missing id)
+[33m>>[0m DELETE /news/{id} (remove the temp article)
+[33m>>[0m GET /scores (list all)
+[33m>>[0m GET /scores/leaderboard (top 10, deduped)
+[33m>>[0m GET /scores/impact (SDG 14 summary)
+[33m>>[0m POST /scores (create a curl-test score)
+[33m>>[0m GET /scores/player/curl-test (player stats)
+[33m>>[0m GET /scores/player/curl-test/history
+[33m>>[0m PUT /scores/{id} (update score)
+[33m>>[0m POST /scores (negative score → 400)
+[33m>>[0m GET /scores/player/Nobody (404 unknown player)
+[33m>>[0m DELETE /scores/{id} (clean up)
+[33m>>[0m GET /api/leaderboard (unified across users + scores + quizzes)
+[2m   unified leaderboard rows: 11[0m
+
+[33m---- results ----[0m
+[32mPASS[0m  GET /news (HTTP 200)
+[32mPASS[0m  GET /news/preview (HTTP 200)
+[32mPASS[0m  preview returns ≤6 items (6)
+[32mPASS[0m  GET /news/trending (HTTP 200)
+[32mPASS[0m  GET /news/categories (HTTP 200)
+[32mPASS[0m  category rows are {category,count}
+[32mPASS[0m  GET /news?category=plastic (HTTP 200)
+[32mPASS[0m  filter returned only 'plastic' rows
+[32mPASS[0m  GET /news/search?q=ocean (HTTP 200)
+[32mPASS[0m  search rejects 1-char query (HTTP 400)
+[32mPASS[0m  POST /news (HTTP 200)
+[32mPASS[0m  POST returned an id
+[32mPASS[0m  GET /news/66 (HTTP 200)
+[32mPASS[0m  single fetch returns same id (d['id'] == 66)
+[32mPASS[0m  PUT /news/66 (HTTP 200)
+[32mPASS[0m  PUT changed title (d['title'] == curl-test UPDATED)
+[32mPASS[0m  PUT lower-cased category (d['category'] == science)
+[32mPASS[0m  PATCH /news/66/like (HTTP 200)
+[32mPASS[0m  PATCH /news/66/like (2nd call) (HTTP 200)
+[32mPASS[0m  second PATCH increased likes (1 → 2)
+[32mPASS[0m  PATCH on missing id (HTTP 404)
+[32mPASS[0m  DELETE /news/66 (HTTP 200)
+[32mPASS[0m  GET after DELETE (HTTP 404)
+[32mPASS[0m  GET /scores (HTTP 200)
+[32mPASS[0m  GET /scores/leaderboard (HTTP 200)
+[32mPASS[0m  leaderboard returns ≤10 rows (3)
+[32mPASS[0m  GET /scores/impact (HTTP 200)
+[32mPASS[0m  impact has expected keys
+[32mPASS[0m  POST /scores (HTTP 200)
+[32mPASS[0m  POST trims player name (d['player'] == curl-test)
+[32mPASS[0m  GET /scores/player/curl-test (HTTP 200)
+[32mPASS[0m  stats: gamesPlayed >=1 (str(d['gamesPlayed']>=1).lower() == true)
+[32mPASS[0m  GET history (HTTP 200)
+[32mPASS[0m  PUT /scores/99 (HTTP 200)
+[32mPASS[0m  PUT updated score (d['score'] == 777)
+[32mPASS[0m  POST negative score (HTTP 400)
+[32mPASS[0m  stats for unknown player (HTTP 404)
+[32mPASS[0m  DELETE /scores/99 (HTTP 200)
+[32mPASS[0m  GET /api/leaderboard (HTTP 200)
+[32mPASS[0m  unified rows have all 8 expected keys
+
+[32m40 passed[0m, [31m0 failed[0m

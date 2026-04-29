@@ -12,4 +12,7 @@ public interface ScoreRepo extends JpaRepository<Score, Long> {
     List<Score> findByPlayer(String player);
 
     List<Score> findTop10ByOrderByScoreDesc();
+
+    /** All games played by one authenticated user. Used by the unified leaderboard. */
+    List<Score> findByUserId(Long userId);
 }

@@ -1,93 +1,114 @@
-// talks to Spring Boot on port 8080
-const API = 'https://clean-our-sea-backend.onrender.com';
+// Clean Our Sea — Quizzes listing page.
+// Calls GET /user-quiz/stats/{userId} to fill the four stat cards in the
+// "Your Progress" section, then GET /quiz to render the quiz cards into the
+// grid. Filters by difficulty, searches by title/description, and navigates
+// to quiz-page.html with the backend quiz id + title when Start is clicked.
 
-// hardcoded user id for now — replace this when login is added
-const USER_ID = 1;
+const BACKEND = 'https://clean-our-sea-backend.onrender.com';
 
-//maps quiz title keywords to an emoji icon and difficulty CSS class
-const ICONS = {
-    'ocean basics': { icon: '🌊' },
-    'plastic':      { icon: '♻️' },
-    'biodiversity': { icon: '🐠' },
-    'climate':      { icon: '🌡️' },
-    'endangered':   { icon: '🐢' },
-    'beach':        { icon: '🏖️' },
-};
-
-function getIcon(title) 
+// Use the logged-in user's id when available; falls back to 1 for guests so
+// the demo stats panel still renders without a session. auth.js exposes
+// window.getUserId() with the same fallback shape.
+function currentUserId()
 {
-    const key = Object.keys(ICONS).find(k => title.toLowerCase().includes(k));
-    return key ? ICONS[key].icon : '🌍';
+    if (typeof getUserId === 'function')        return getUserId();
+    if (window.auth && window.auth.getCurrentUserId)
+    {
+        const id = window.auth.getCurrentUserId();
+        if (id != null) return id;
+    }
+    return 1;
 }
 
-function diffClass(difficulty) 
+// maps quiz title keywords to an emoji icon
+const ICONS = {
+    'ocean basics': '🌊',
+    'plastic':      '♻️',
+    'biodiversity': '🐠',
+    'climate':      '🌡️',
+    'endangered':   '🐢',
+    'beach':        '🏖️',
+};
+
+function getIcon(title)
 {
-    const d = difficulty.toLowerCase();
+    const key = Object.keys(ICONS).find(k => title.toLowerCase().includes(k));
+    return key ? ICONS[key] : '🌍';
+}
+
+function diffClass(difficulty)
+{
+    const d = (difficulty || '').toLowerCase();
     if (d === 'easy')   return 'difficulty-easy';
     if (d === 'medium') return 'difficulty-medium';
     return 'difficulty-hard';
 }
 
-// stats
-//calls GET /user-quiz/stats/1 and fills in the four stat cards
-async function loadStats() 
+// stats — calls GET /user-quiz/stats/{userId} and updates the stat cards
+async function loadStats()
 {
-    try 
+    try
     {
-        const res   = await fetch(`${API}/user-quiz/stats/${USER_ID}`);
+        const userId = currentUserId();
+        const res    = await fetch(`${BACKEND}/user-quiz/stats/${userId}`);
+        if (!res.ok) return;
         const stats = await res.json();
 
-        // update the DOM elements with real data from the database
-        document.getElementById('stat-completed').textContent = stats.quizzesCompleted;
-        document.getElementById('stat-avg').textContent       = stats.averageScore + ' pts avg';
-        document.getElementById('stat-points').textContent    = stats.totalPoints;
+        const completedEl = document.getElementById('stat-completed');
+        const avgEl       = document.getElementById('stat-avg');
+        const pointsEl    = document.getElementById('stat-points');
 
-        // badges stay static for now until an achievements table is added
-    } 
-    catch (err) 
+        if (completedEl) completedEl.textContent = stats.quizzesCompleted;
+        if (avgEl)       avgEl.textContent       = stats.averageScore + 'pts avg';
+        if (pointsEl)    pointsEl.textContent    = stats.totalPoints;
+    }
+    catch (err)
     {
-        // if backend is down, the page still works — stats just show dashes
-        console.warn('Could not load stats from backend:', err);
+        // stats just stay as dashes if the backend is not running
+        console.warn('Could not load stats:', err);
     }
 }
 
-// cards
-// calls GET /quiz and builds a card for each quiz returned
-async function loadQuizzes() 
+// cards — calls GET /quiz and builds a card for each quiz returned
+async function loadQuizzes()
 {
-    try 
+    try
     {
-        const res     = await fetch(`${API}/quiz`);
+        const res = await fetch(`${BACKEND}/quiz`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const quizzes = await res.json();
-
         renderCards(quizzes);
-    } 
-    catch (err) 
+    }
+    catch (err)
     {
-        console.error('Could not load quizzes from backend:', err);
-        document.getElementById('quiz-grid').innerHTML = `
-            <div style="grid-column:1/-1;text-align:center;padding:40px;color:#9aa4b2;">
-                ⚠️ Could not connect to backend.
-                Make sure Spring Boot is running on <strong>https://clean-our-sea-backend.onrender.com</strong>.
-            </div>`;
+        console.error('Could not load quizzes:', err);
+        const grid = document.getElementById('quiz-grid');
+        if (grid)
+        {
+            grid.innerHTML = `
+                <div style="grid-column:1/-1;text-align:center;padding:40px;color:#9aa4b2;">
+                    ⚠️ Could not connect to backend.
+                    Make sure Spring Boot is running on <strong>https://clean-our-sea-backend.onrender.com</strong>.
+                </div>`;
+        }
     }
 }
 
-function renderCards(quizzes) 
+function renderCards(quizzes)
 {
     const grid = document.getElementById('quiz-grid');
+    if (!grid) return;
     grid.innerHTML = '';
 
-    quizzes.forEach(quiz => 
+    quizzes.forEach(quiz =>
     {
         const dc   = diffClass(quiz.difficulty);
         const icon = getIcon(quiz.title);
 
         const card = document.createElement('div');
-        card.className            = 'quiz-card';
-        card.dataset.quizId       = quiz.quizId;
-        card.dataset.difficulty   = quiz.difficulty.toLowerCase();
+        card.className          = 'quiz-card';
+        card.dataset.quizId     = quiz.quizId;
+        card.dataset.difficulty = (quiz.difficulty || '').toLowerCase();
 
         card.innerHTML = `
             <div class="quiz-icon">${icon}</div>
@@ -103,55 +124,67 @@ function renderCards(quizzes)
         grid.appendChild(card);
     });
 
-    // attach filter and search listeners after the cards are in the DOM
+    // attach filter, search and start-button listeners after the cards exist
     attachListeners();
 }
 
-// filters and searches
-function attachListeners() 
+function attachListeners()
 {
     const cards    = document.querySelectorAll('.quiz-card');
     const search   = document.getElementById('quiz-search');
     const dropdown = document.getElementById('difficulty-filter');
+    const counter  = document.getElementById('quiz-counter');
 
-    function applyFilters() 
+    function applyFilters()
     {
-        const term = search.value.toLowerCase();
-        const diff = dropdown.value.toLowerCase();
+        const term = (search ? search.value : '').toLowerCase();
+        const diff = (dropdown ? dropdown.value : 'all').toLowerCase();
+        let visible = 0;
 
-        cards.forEach(card => 
+        cards.forEach(card =>
         {
             const title    = card.querySelector('.quiz-title').textContent.toLowerCase();
             const desc     = card.querySelector('.quiz-description').textContent.toLowerCase();
             const cardDiff = card.dataset.difficulty;
 
-            const matchSearch = title.includes(term) || desc.includes(term);
+            const matchSearch = !term || title.includes(term) || desc.includes(term);
             const matchDiff   = diff === 'all' || cardDiff === diff;
+            const show        = matchSearch && matchDiff;
 
-            card.style.display = matchSearch && matchDiff ? 'block' : 'none';
+            card.style.display = show ? 'block' : 'none';
+            if (show) visible++;
         });
+
+        if (counter) counter.textContent = visible;
     }
 
-    search.addEventListener('input', applyFilters);
-    dropdown.addEventListener('change', applyFilters);
+    if (search)   search.addEventListener('input',   applyFilters);
+    if (dropdown) dropdown.addEventListener('change', applyFilters);
 
-    // clicking start quiz sends the user to the quiz page with the id in the URL
-    document.querySelectorAll('.start-btn').forEach(btn => 
+    // Start button → open quiz-page.html with the backend quiz id + title.
+    cards.forEach(card =>
     {
-        btn.addEventListener('click', function (e) 
+        const button = card.querySelector('.start-btn');
+        if (!button) return;
+        button.addEventListener('click', function (e)
         {
             e.stopPropagation();
-            const card   = this.closest('.quiz-card');
-            const quizId = card.dataset.quizId;
-            const title  = encodeURIComponent(card.querySelector('.quiz-title').textContent);
-            window.location.href = `quiz-page.html?id=${quizId}&title=${title}`;
+            const quizId   = card.dataset.quizId;
+            const quizName = card.querySelector('.quiz-title').textContent.trim();
+
+            if (!quizId)
+            {
+                alert('This quiz is not available — the backend may be offline.');
+                return;
+            }
+
+            window.location.href =
+                `quiz-page.html?id=${encodeURIComponent(quizId)}&title=${encodeURIComponent(quizName)}`;
         });
     });
+
+    applyFilters();
 }
 
-// runs both fetches when the page finishes loading
-document.addEventListener('DOMContentLoaded', () => 
-{
-    loadStats();
-    loadQuizzes();
-});
+loadStats();
+loadQuizzes();

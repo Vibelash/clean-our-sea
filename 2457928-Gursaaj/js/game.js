@@ -480,19 +480,25 @@ resetGame();
 
 // ---------- Backend integration ----------
 function sendScoreToBackend(finalScore) {
+    // Include userId when logged in so the backend can bump the matching
+    // user's totalScore — that's what Tala's /leaderboard ranks on, so the
+    // snake game and the global leaderboard stay in sync.
+    const userId = (window.auth && window.auth.getCurrentUserId)
+        ? window.auth.getCurrentUserId()
+        : null;
     fetch(BACKEND_BASE + "/scores", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             player: session.name || session.email,
-            score:  finalScore
+            score:  finalScore,
+            userId: userId
         })
     })
     .then(r => r.json())
     .then(data => {
         console.log("Score saved:", data);
         loadLeaderboard();
-        loadImpact();
     })
     .catch(err => {
         console.error("Error sending score to backend:", err);
@@ -508,11 +514,20 @@ function loadLeaderboard() {
             if (!r.ok) throw new Error("HTTP " + r.status);
             return r.json();
         })
-        .then(renderLeaderboard)
+        .then(rows => {
+            renderLeaderboard(rows);
+            // Community impact is derived from the same leaderboard rows
+            // so the two cards always agree without a second backend call.
+            updateImpactFromLeaderboard(rows || []);
+        })
         .catch(err => {
             console.error("Leaderboard load failed:", err);
             leaderboardEl.innerHTML =
                 '<li class="lb-empty">Backend unreachable.</li>';
+            impactPiecesEl.textContent = "—";
+            impactMessageEl.textContent = "Backend unreachable.";
+            impactCompareEl.hidden = true;
+            updateCommunityGoal(0);
         });
 }
 
@@ -549,7 +564,6 @@ function renderLeaderboard(rows) {
 refreshLbBtn.addEventListener("click", () => {
     leaderboardEl.innerHTML = '<li class="lb-empty">Refreshing…</li>';
     loadLeaderboard();
-    loadImpact();
 });
 
 /* ---------- Community impact ---------- */
@@ -558,40 +572,35 @@ refreshLbBtn.addEventListener("click", () => {
 // even a classroom demo feels meaningful.
 const COMMUNITY_GOAL = 1000;
 
-function loadImpact() {
-    fetch(BACKEND_BASE + "/scores/impact")
-        .then(r => {
-            if (!r.ok) throw new Error("HTTP " + r.status);
-            return r.json();
-        })
-        .then(data => {
-            const pieces = data.piecesOfPlasticCleaned ?? 0;
-            impactPiecesEl.textContent = pieces;
-            impactMessageEl.textContent = data.message ||
-                "The community hasn't played any rounds yet.";
+function updateImpactFromLeaderboard(rows) {
+    const totalScore = rows.reduce((sum, r) => sum + (Number(r.score) || 0), 0);
+    const players    = rows.length;
+    const pieces     = Math.floor(totalScore / POINTS_PER_HIT);
 
-            // Human-scale comparison: relate virtual pieces to everyday items.
-            // (These ratios are deliberately simple so the point lands fast.)
-            if (pieces > 0) {
-                const bottles = pieces;                       // 1 piece ≈ 1 bottle
-                const bags    = Math.max(1, Math.round(pieces * 0.6));
-                impactCompareEl.hidden = false;
-                impactCompareEl.textContent =
-                    `Roughly equal to ${bottles} plastic bottles or ${bags} shopping bags removed.`;
-            } else {
-                impactCompareEl.hidden = true;
-            }
+    impactPiecesEl.textContent = pieces;
 
-            // Community goal progress bar (on the crisis card).
-            updateCommunityGoal(pieces);
-        })
-        .catch(err => {
-            console.error("Impact load failed:", err);
-            impactPiecesEl.textContent = "—";
-            impactMessageEl.textContent = "Backend unreachable.";
-            impactCompareEl.hidden = true;
-            updateCommunityGoal(0);
-        });
+    if (players === 0) {
+        impactMessageEl.textContent =
+            "The community hasn't played any rounds yet.";
+    } else {
+        const playerWord = players === 1 ? "player" : "players";
+        impactMessageEl.textContent =
+            `The Snake Infinity community has virtually cleaned ${pieces} pieces of plastic across ${players} ${playerWord} on the leaderboard.`;
+    }
+
+    // Human-scale comparison: relate virtual pieces to everyday items.
+    // (These ratios are deliberately simple so the point lands fast.)
+    if (pieces > 0) {
+        const bottles = pieces;                       // 1 piece ≈ 1 bottle
+        const bags    = Math.max(1, Math.round(pieces * 0.6));
+        impactCompareEl.hidden = false;
+        impactCompareEl.textContent =
+            `Roughly equal to ${bottles} plastic bottles or ${bags} shopping bags removed.`;
+    } else {
+        impactCompareEl.hidden = true;
+    }
+
+    updateCommunityGoal(pieces);
 }
 
 function updateCommunityGoal(pieces) {
@@ -847,5 +856,4 @@ function escapeHtml(str) {
 
 /* ---------- Initial load ---------- */
 loadLeaderboard();
-loadImpact();
 initCrisisCard();

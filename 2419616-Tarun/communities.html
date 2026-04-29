@@ -69,15 +69,15 @@
             <form id="createForm">
                 <div class="form-group">
                     <label for="cName">Name</label>
-                    <input id="cName" type="text" required placeholder="e.g. Brighton Beach Cleaners">
+                    <input id="cName" name="name" type="text" required placeholder="e.g. Brighton Beach Cleaners">
                 </div>
                 <div class="form-group">
                     <label for="cDesc">Description</label>
-                    <textarea id="cDesc" rows="3" required placeholder="What is this community about?"></textarea>
+                    <textarea id="cDesc" name="description" rows="3" required placeholder="What is this community about?"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="cCategory">Category</label>
-                    <select id="cCategory">
+                    <select id="cCategory" name="category">
                         <option value="cleanup">Cleanup</option>
                         <option value="research">Research</option>
                         <option value="advocacy">Advocacy</option>
@@ -94,15 +94,17 @@
 
     <!-- Card template -->
     <template id="cardTmpl">
-        <div class="community-card">
+        <div class="community-card card">
             <div class="card-body">
                 <h3 class="title"></h3>
                 <p class="desc"></p>
-                <p class="meta"></p>
+                <p class="meta">
+                    <span class="members"></span>
+                    <span class="tags"></span>
+                </p>
             </div>
             <div class="card-actions">
-                <button class="btn primary join-btn">Join</button>
-                <button class="btn delete">Delete</button>
+                <button class="btn primary join">Join</button>
             </div>
         </div>
     </template>

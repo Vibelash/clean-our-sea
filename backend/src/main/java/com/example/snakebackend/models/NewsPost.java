@@ -54,6 +54,12 @@ public class NewsPost {
     @Column(nullable = false)
     private LocalDateTime postedAt;
 
+    /** Reader-driven engagement counter, bumped by PATCH /news/{id}/like.
+     *  columnDefinition supplies a DEFAULT 0 so existing rows survive the
+     *  schema migration when this column is added by `ddl-auto=update`. */
+    @Column(nullable = false, columnDefinition = "BIGINT NOT NULL DEFAULT 0")
+    private long likes = 0;
+
     public NewsPost() {}
 
     public NewsPost(String title, String summary, String body,
@@ -98,4 +104,7 @@ public class NewsPost {
 
     public LocalDateTime getPostedAt() { return postedAt; }
     public void setPostedAt(LocalDateTime postedAt) { this.postedAt = postedAt; }
+
+    public long getLikes() { return likes; }
+    public void setLikes(long likes) { this.likes = likes; }
 }

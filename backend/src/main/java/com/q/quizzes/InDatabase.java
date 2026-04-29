@@ -20,13 +20,14 @@ public class InDatabase implements CommandLineRunner
     private QuestionRepository questionRepository;
 
     @Override
-    public void run(String... args) throws Exception 
+    public void run(String... args) throws Exception
     {
-        // clear before seeding so it's fresh every restart
-        questionRepository.deleteAll();
-        quizRepository.deleteAll();
+        // Idempotent: only seed when DB is empty. Re-seeding on every
+        // restart caused quiz IDs to drift (auto-increment never resets),
+        // orphaning rows in user_quizzes that referenced previous IDs.
+        if (quizRepository.count() > 0) return;
 
-        // Seed Quizzes 
+        // Seed Quizzes
         Quiz q1 = quizRepository.save(new Quiz(
                 "Ocean Basics",
                 "Learn the fundamentals of ocean ecosystems, marine life, and the importance of healthy seas.",
