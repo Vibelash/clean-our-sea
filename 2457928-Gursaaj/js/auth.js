@@ -20,6 +20,88 @@
 
     const BACKEND_BASE = "https://clean-our-sea-backend.onrender.com";
 
+    /* ---------------------- connectivity banner ----------------------
+       Render free-tier dynos sleep after ~15 min idle and a cold start
+       takes 30-60s. Without UI feedback the site looks broken during
+       that window. We:
+         1. Fire a warmup GET on first script load so the dyno starts
+            spinning up before the user clicks anything.
+         2. Wrap fetch() so any backend call that takes >3s shows a
+            "Waking the server..." banner until a response arrives.
+       Pages that already render skeletons keep working unchanged; this
+       just adds a global hint so users know it isn't frozen.
+    -------------------------------------------------------------------- */
+
+    let inflight = 0;
+    let bannerTimer = null;
+    let bannerEl = null;
+
+    function ensureBanner() {
+        if (bannerEl || typeof document === "undefined") return bannerEl;
+        bannerEl = document.createElement("div");
+        bannerEl.id = "cos-server-banner";
+        bannerEl.setAttribute("role", "status");
+        bannerEl.style.cssText =
+            "position:fixed;top:0;left:0;right:0;z-index:9999;" +
+            "padding:10px 16px;font:600 14px system-ui,sans-serif;" +
+            "background:#0b3d5c;color:#fff;text-align:center;" +
+            "box-shadow:0 2px 6px rgba(0,0,0,.2);" +
+            "transform:translateY(-100%);transition:transform .25s ease;";
+        bannerEl.textContent = "Waking the server up — first load can take up to a minute on the free tier...";
+        if (document.body) document.body.appendChild(bannerEl);
+        else document.addEventListener("DOMContentLoaded", () => document.body.appendChild(bannerEl));
+        return bannerEl;
+    }
+
+    function showBanner() {
+        const el = ensureBanner();
+        if (el) el.style.transform = "translateY(0)";
+    }
+
+    function hideBanner() {
+        if (bannerEl) bannerEl.style.transform = "translateY(-100%)";
+    }
+
+    function trackRequest(promise) {
+        inflight++;
+        if (!bannerTimer) {
+            bannerTimer = setTimeout(() => { if (inflight > 0) showBanner(); }, 3000);
+        }
+        const finish = () => {
+            inflight--;
+            if (inflight <= 0) {
+                inflight = 0;
+                if (bannerTimer) { clearTimeout(bannerTimer); bannerTimer = null; }
+                hideBanner();
+            }
+        };
+        promise.then(finish, finish);
+        return promise;
+    }
+
+    // Wrap window.fetch so every backend call to the Render origin runs
+    // through the inflight tracker and triggers the banner if slow.
+    if (typeof window !== "undefined" && window.fetch) {
+        const origFetch = window.fetch.bind(window);
+        window.fetch = function (input, init) {
+            try {
+                const url = typeof input === "string" ? input : (input && input.url) || "";
+                if (url.indexOf(BACKEND_BASE) === 0) {
+                    return trackRequest(origFetch(input, init));
+                }
+            } catch { /* fall through to plain fetch */ }
+            return origFetch(input, init);
+        };
+    }
+
+    // Fire-and-forget warmup so the dyno starts spinning up before the
+    // user touches anything. Errors are intentionally swallowed.
+    try {
+        if (typeof window !== "undefined" && window.fetch) {
+            window.fetch(BACKEND_BASE + "/", { method: "GET", cache: "no-store" }).catch(() => {});
+        }
+    } catch { /* ignore */ }
+
     // localStorage keys. `cleanOurSea.*` are the new canonical keys; the
     // legacy `snakeInfinity.session` shape is also written so any older
     // page that still reads it directly keeps functioning.

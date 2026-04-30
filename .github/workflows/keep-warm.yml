@@ -1,0 +1,25 @@
+name: keep-warm
+
+# Pings the Render free-tier backend every ~10 minutes so it doesn't
+# spin down. Without this the first request after ~15 min of idle takes
+# 30-60s while the dyno cold-starts, which makes the site look broken.
+#
+# GitHub schedules cron jobs on a best-effort basis (usually within a
+# few minutes of the requested time). The */10 schedule plus Render's
+# 15-minute idle window leaves comfortable headroom.
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ping backend
+        run: |
+          curl -fsS --max-time 90 https://clean-our-sea-backend.onrender.com/ \
+            && echo "backend warm" \
+            || (echo "backend ping failed" && exit 1)
