@@ -20,6 +20,13 @@ jobs:
     steps:
       - name: Ping backend
         run: |
-          curl -fsS --max-time 90 https://clean-our-sea-backend.onrender.com/ \
+          # max-time 120 covers worst-case Render cold-starts; --retry rides
+          # out transient blips so a single hiccup doesn't spam failure email.
+          curl -fsS \
+               --max-time 120 \
+               --retry 3 \
+               --retry-delay 15 \
+               --retry-all-errors \
+               https://clean-our-sea-backend.onrender.com/ \
             && echo "backend warm" \
-            || (echo "backend ping failed" && exit 1)
+            || (echo "backend ping failed after retries" && exit 1)
